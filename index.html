@@ -1,0 +1,517 @@
+<meta charset="utf-8">
+<title>What is the Standard Reserve?</title>
+<meta name="description" content="A plain-language guide to the Standard Reserve. One currency, one market, one central bank made of code.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+
+<style>
+:root{
+  --bg:#F4F5F3; --surface:#FFFFFF; --surface-2:#EBECE8; --surface-3:#E1E3DD;
+  --line:#D6D8D2; --line-2:#BCBFB8;
+  --ink:#171D1A; --ink-2:#4B534F; --ink-3:#79817D;
+  --brass:#9A6B14; --teal:#0086A6; --rose:#A8446B;
+  --brass-fill:rgba(154,107,20,.14); --teal-fill:rgba(0,134,166,.14); --rose-fill:rgba(168,68,107,.13);
+  --shadow:0 1px 2px rgba(23,29,26,.06), 0 8px 24px -12px rgba(23,29,26,.18);
+  --r:3px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1215; --surface:#11171B; --surface-2:#182026; --surface-3:#1F292F;
+    --line:#253036; --line-2:#37464D;
+    --ink:#E9EEEB; --ink-2:#9EAAA7; --ink-3:#6D7A78;
+    --brass:#C0892B; --teal:#27A3C0; --rose:#C4688C;
+    --brass-fill:rgba(192,137,43,.16); --teal-fill:rgba(39,163,192,.16); --rose-fill:rgba(196,104,140,.15);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1215; --surface:#11171B; --surface-2:#182026; --surface-3:#1F292F;
+  --line:#253036; --line-2:#37464D;
+  --ink:#E9EEEB; --ink-2:#9EAAA7; --ink-3:#6D7A78;
+  --brass:#C0892B; --teal:#27A3C0; --rose:#C4688C;
+  --brass-fill:rgba(192,137,43,.16); --teal-fill:rgba(39,163,192,.16); --rose-fill:rgba(196,104,140,.15);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable}
+[hidden]{display:none!important}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:Archivo,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{max-width:840px; margin:0 auto; padding:28px 22px 56px}
+
+/* ---------- $STANDARD chip ---------- */
+.std{
+  background:var(--ink); color:var(--bg);
+  font-family:"IBM Plex Mono",monospace; font-size:.82em; font-weight:500;
+  padding:1px 6px 2px; border-radius:2px; white-space:nowrap; letter-spacing:.02em;
+}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap}
+.credit{display:flex; gap:8px; align-items:baseline; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); flex-wrap:wrap}
+.credit a{color:var(--ink-2); text-decoration:none; border-bottom:1px solid var(--line-2)}
+.credit a:hover{color:var(--ink); border-bottom-color:var(--ink-2)}
+.credit a.contrib{border:1px solid var(--line-2); border-radius:var(--r); padding:3px 9px; margin-left:4px}
+.credit a.contrib:hover{background:var(--surface-2)}
+.pagenav{display:flex; gap:6px}
+.pagenav a{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  text-decoration:none; color:var(--ink-2); border:1px solid var(--line-2); border-radius:var(--r);
+  padding:5px 12px; transition:background .12s;
+}
+.pagenav a:hover{background:var(--surface-2)}
+.pagenav a.on{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+
+/* ---------- header ---------- */
+.masthead{padding-bottom:18px; border-bottom:1px solid var(--line-2)}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+h1{
+  font-family:Newsreader,Georgia,serif; font-optical-sizing:auto;
+  font-weight:400; font-size:clamp(28px,4.4vw,40px); line-height:1.04;
+  margin:14px 0 0; letter-spacing:-.012em; text-wrap:balance;
+}
+.sub{margin:10px 0 0; color:var(--ink-2); max-width:64ch; font-size:14.5px}
+.sub a{color:var(--ink)}
+
+/* ---------- progress strip ---------- */
+.progress{display:flex; gap:6px; margin:16px 0 0; flex-wrap:wrap}
+.progress button{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em;
+  padding:4px 10px; border:1px solid var(--line-2); background:var(--surface);
+  color:var(--ink-3); border-radius:var(--r); cursor:pointer; transition:background .12s;
+}
+.progress button:hover{background:var(--surface-2)}
+.progress button.on{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+
+/* ---------- steps ---------- */
+.step{display:none}
+.step.on{display:block; animation:stepin .22s ease}
+@keyframes stepin{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+.num{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3); display:block; margin-top:30px}
+h2{font-family:Newsreader,Georgia,serif; font-weight:500; font-size:27px; margin:6px 0 12px; letter-spacing:-.008em}
+p{margin:0 0 14px; color:var(--ink-2); max-width:66ch}
+p strong, li strong{color:var(--ink); font-weight:600}
+ul.plain{margin:0 0 14px; padding-left:20px; color:var(--ink-2); max-width:64ch}
+ul.plain li{margin-bottom:8px}
+
+/* ---------- step nav buttons ---------- */
+.stepnav{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-areas:"back where next" ". hint .";
+  column-gap:14px; row-gap:10px; align-items:center;
+  margin-top:28px; padding-top:16px; border-top:1px solid var(--line);
+}
+.stepnav .btn{
+  font-family:inherit; font-size:14px; font-weight:500; padding:9px 18px; border-radius:var(--r);
+  border:1px solid var(--line-2); background:var(--surface); color:var(--ink); cursor:pointer;
+  transition:background .12s; text-decoration:none; display:inline-block;
+}
+.stepnav #back{grid-area:back}
+.stepnav #next{grid-area:next}
+.stepnav .btn:hover{background:var(--surface-2)}
+.stepnav .btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.stepnav .btn.primary:hover{opacity:.87; background:var(--ink)}
+.stepnav .btn:disabled{opacity:.35; cursor:not-allowed}
+.stepnav .btn:disabled:hover{background:var(--surface)}
+.stepnav .where{grid-area:where; text-align:center; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.keyhint{grid-area:hint; font-size:11.5px; color:var(--ink-3); text-align:center; margin:0 0 14px; max-width:none}
+.keyhint kbd{font-family:"IBM Plex Mono",monospace; border:1px solid var(--line-2); border-radius:2px; padding:0 4px; font-size:10.5px}
+
+/* ---------- callout ---------- */
+.callout{
+  border-left:2px solid var(--brass); background:var(--brass-fill);
+  padding:12px 16px; border-radius:0 var(--r) var(--r) 0; margin:18px 0;
+  font-size:14.5px; color:var(--ink); max-width:62ch;
+}
+
+/* ---------- cast cards ---------- */
+.cast{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin:18px 0}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:14px 16px; box-shadow:var(--shadow)}
+.card h3{font-family:Newsreader,Georgia,serif; font-size:18px; font-weight:500; margin:0 0 6px; display:flex; align-items:baseline; gap:8px}
+.card h3 .tag{font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); border:1px solid var(--brass); border-radius:2px; padding:1px 5px}
+.card p{font-size:13.5px; margin:0; line-height:1.5}
+
+/* ---------- diagram ---------- */
+.diagram{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:18px 14px 8px; box-shadow:var(--shadow); margin:18px 0; overflow-x:auto}
+.diagram svg{display:block; width:100%; min-width:560px; height:auto}
+.diagram .dnote{font-size:12px; color:var(--ink-3); text-align:center; margin:8px 0 6px}
+.nodebox{fill:var(--surface-2); stroke:var(--line-2)}
+.nodebox.hot{fill:var(--brass-fill); stroke:var(--brass)}
+.ntitle{fill:var(--ink); font:500 14px Archivo,sans-serif}
+.nsub{fill:var(--ink-3); font:10.5px "IBM Plex Mono",monospace}
+.flowline{stroke:var(--ink-3); stroke-width:1.5; fill:none}
+.flowlab{fill:var(--ink-2); font:10.5px "IBM Plex Mono",monospace}
+.arrowhead{fill:var(--ink-3)}
+
+/* ---------- comparison ---------- */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0}
+@media(max-width:640px){.compare{grid-template-columns:1fr}}
+.compare .card h3{font-size:17px}
+.compare .card.bad h3{color:var(--rose)}
+.compare .card.good h3{color:var(--brass)}
+.compare .card p{margin-bottom:8px}
+.compare .card p:last-child{margin-bottom:0}
+
+/* ---------- regimes table ---------- */
+table.tbl{width:100%; border-collapse:collapse; font-size:13.5px; margin:18px 0; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow)}
+table.tbl th,table.tbl td{text-align:left; padding:9px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+table.tbl tr:last-child td{border-bottom:0}
+table.tbl th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+table.tbl th.in,table.tbl td.in{color:var(--brass)}
+table.tbl th.out,table.tbl td.out{color:var(--teal)}
+table.tbl td:first-child{color:var(--ink-2)}
+.scroll{overflow-x:auto}
+
+/* ---------- FAQ ---------- */
+.faq{margin:18px 0 0}
+.faq details{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); margin-bottom:8px; padding:0 16px}
+.faq summary{cursor:pointer; font-family:Newsreader,Georgia,serif; font-size:16.5px; font-weight:500; padding:12px 26px 12px 0; list-style:none; display:block; position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+"; font-family:"IBM Plex Mono",monospace; font-size:14px; color:var(--ink-3); position:absolute; right:0; top:13px}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{font-size:13.5px; margin:0; padding:0 0 14px; max-width:66ch}
+
+/* ---------- CTA ---------- */
+.cta{
+  display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:26px 0 0;
+  background:var(--surface); border:1px solid var(--line-2); border-radius:var(--r);
+  padding:18px 20px; box-shadow:var(--shadow);
+}
+.cta .t{flex:1 1 260px}
+.cta .t b{font-family:Newsreader,Georgia,serif; font-size:19px; font-weight:500; display:block; margin-bottom:3px}
+.cta .t span{font-size:13.5px; color:var(--ink-2)}
+.cta a.btn{
+  flex:none; text-decoration:none; background:var(--ink); color:var(--bg);
+  font-size:14px; font-weight:500; padding:10px 18px; border-radius:var(--r);
+}
+.cta a.btn:hover{opacity:.87}
+
+.foot{margin-top:28px; padding-top:14px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-3); max-width:none}
+.foot a{color:var(--ink-2)}
+@media (prefers-reduced-motion: reduce){*{transition:none !important; animation:none !important}}
+</style>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <nav class="pagenav">
+      <a class="on" href="index.html">Explainer</a>
+      <a href="simulator.html">Simulator</a>
+    </nav>
+    <div class="credit">
+      <span>site by</span>
+      <a href="https://x.com/0xlonetree" target="_blank" rel="noopener">@0xlonetree</a>
+      <span>&#183;</span>
+      <span>protocol</span>
+      <a href="https://x.com/standard_rsv" target="_blank" rel="noopener">@standard_rsv</a>
+      <span>&#183;</span>
+      <a href="https://www.standardreserve.xyz/whitepaper/" target="_blank" rel="noopener">whitepaper</a>
+      <!-- TODO: point at the real repo once it exists -->
+      <a class="contrib" href="https://github.com/0xlonetree/standard-sim" target="_blank" rel="noopener">contribute &#8599;</a>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <span class="eyebrow">Standard Reserve &#183; unofficial guide</span>
+    <h1>What is the Standard Reserve?</h1>
+    <p class="sub">A plain-language introduction to the protocol, one idea at a time. Nine short steps and an FAQ, then the <a href="simulator.html">simulator</a>.</p>
+    <div class="progress" id="progress" role="tablist" aria-label="Steps"></div>
+  </header>
+
+  <main id="steps">
+
+  <!-- step 1 -->
+  <section class="step" data-title="The big idea">
+    <span class="num">01 &#183; The big idea</span>
+    <h2>A central bank, run by code</h2>
+    <p>The Standard Reserve is a central bank. It exists entirely as immutable smart contracts on Ethereum, so no individual or group can influence policy decisions. It governs a closed monetary economy with one currency, <span class="std">$STANDARD</span>, and one market, where that currency trades against ETH.</p>
+    <p>The bank reads a single signal and reacts automatically. Capital flowing in loosens policy: issuance rises and the bank accumulates hard reserves. Capital flowing out tightens policy: issuance is cut, the bank buys back and burns its own currency, and exits become expensive.</p>
+    <p>The rest of this guide is detail. The short version: <strong>the system rewards participants who stay and build, and prices the exit of those who leave.</strong></p>
+    <div class="callout">Two terms used throughout. <strong>ETH</strong> is ether, the native currency of the Ethereum network and the outside capital in this system. <strong>Burning</strong> a token destroys it permanently and removes it from supply.</div>
+  </section>
+
+  <!-- step 2 -->
+  <section class="step" data-title="The entities">
+    <span class="num">02 &#183; The entities</span>
+    <h2>Six core components</h2>
+    <div class="cast">
+      <div class="card">
+        <h3><span class="std">$STANDARD</span> <span class="tag">the currency</span></h3>
+        <p>Hard cap of one billion. Tokens are burned constantly and burned tokens never return, so the maximum supply only decreases.</p>
+      </div>
+      <div class="card">
+        <h3>The market <span class="tag">the pool</span></h3>
+        <p>One pool on Uniswap v4 where anyone can swap ETH for <span class="std">$STANDARD</span> and back. Every swap pays a trading fee to the central bank.</p>
+      </div>
+      <div class="card">
+        <h3>The central bank <span class="tag">the code</span></h3>
+        <p>Immutable smart contracts. They read one signal, net ETH flow, and set the issuance rate and the routing of fees. No votes and no discretion.</p>
+      </div>
+      <div class="card">
+        <h3>A charter <span class="tag">your licence</span></h3>
+        <p>An NFT that makes you a banker. 1,000 Founding Charters existed at genesis. A charter is the only way to receive issuance.</p>
+      </div>
+      <div class="card">
+        <h3>Branches <span class="tag">the earners</span></h3>
+        <p>Each charter holds 1 to 10 branches. Every branch earns an equal share of daily issuance. More branches means a larger share.</p>
+      </div>
+      <div class="card">
+        <h3>The vaults <span class="tag">fee routing</span></h3>
+        <p>Where fee ETH lands. In expansion it buys hard reserve assets such as tokenized gold. In contraction it funds buybacks that are burned.</p>
+      </div>
+    </div>
+    <div class="callout">The whitepaper's own mental model: <strong>a charter is a company and branches are its stores.</strong> The company earns through its stores and reinvests earnings to open more. It pays its owner by closing stores. Closing the last store dissolves the company.</div>
+  </section>
+
+  <!-- step 3 -->
+  <section class="step" data-title="How it connects">
+    <span class="num">03 &#183; How it connects</span>
+    <h2>The system at a glance</h2>
+    <p>Traders swap ETH and <span class="std">$STANDARD</span> in the pool. Every swap pays the bank a fee. The bank issues new currency to bankers. Bankers burn currency to expand. Fee ETH accumulates in the vaults, and in contraction the vaults buy the currency back and burn it.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 880 340" role="img" aria-label="How the six entities connect">
+        <defs>
+          <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L8,4 L0,8 z" class="arrowhead"/>
+          </marker>
+        </defs>
+        <!-- nodes -->
+        <rect class="nodebox" x="16" y="28" width="140" height="56" rx="3"/>
+        <text class="ntitle" x="86" y="52" text-anchor="middle">Traders</text>
+        <text class="nsub" x="86" y="70" text-anchor="middle">anyone at all</text>
+
+        <rect class="nodebox" x="270" y="28" width="180" height="56" rx="3"/>
+        <text class="ntitle" x="360" y="52" text-anchor="middle">The market</text>
+        <text class="nsub" x="360" y="70" text-anchor="middle">ETH &#8646; $STANDARD</text>
+
+        <rect class="nodebox hot" x="610" y="28" width="190" height="56" rx="3"/>
+        <text class="ntitle" x="705" y="52" text-anchor="middle">The central bank</text>
+        <text class="nsub" x="705" y="70" text-anchor="middle">immutable code</text>
+
+        <rect class="nodebox" x="270" y="240" width="180" height="56" rx="3"/>
+        <text class="ntitle" x="360" y="264" text-anchor="middle">The vaults</text>
+        <text class="nsub" x="360" y="282" text-anchor="middle">reserves &#183; buybacks</text>
+
+        <rect class="nodebox" x="610" y="240" width="190" height="56" rx="3"/>
+        <text class="ntitle" x="705" y="264" text-anchor="middle">Bankers</text>
+        <text class="nsub" x="705" y="282" text-anchor="middle">charters &amp; branches</text>
+
+        <!-- traders <-> market -->
+        <line class="flowline" x1="164" y1="56" x2="262" y2="56" marker-end="url(#arr)" marker-start="url(#arr)"/>
+        <text class="flowlab" x="213" y="44" text-anchor="middle">trades</text>
+
+        <!-- market -> bank -->
+        <line class="flowline" x1="458" y1="56" x2="602" y2="56" marker-end="url(#arr)"/>
+        <text class="flowlab" x="530" y="44" text-anchor="middle">net flow + fees</text>
+
+        <!-- bank <-> bankers -->
+        <line class="flowline" x1="672" y1="92" x2="672" y2="232" marker-end="url(#arr)"/>
+        <text class="flowlab" x="662" y="166" text-anchor="end">issues new currency</text>
+        <line class="flowline" x1="738" y1="232" x2="738" y2="92" marker-end="url(#arr)"/>
+        <text class="flowlab" x="748" y="166" text-anchor="start">burns for licences</text>
+
+        <!-- bank -> vaults (elbow) -->
+        <path class="flowline" d="M610,74 L478,74 L478,268 L458,268" marker-end="url(#arr)"/>
+        <text class="flowlab" x="488" y="180" text-anchor="start">fee ETH</text>
+
+        <!-- vaults -> market -->
+        <line class="flowline" x1="340" y1="232" x2="340" y2="92" marker-end="url(#arr)"/>
+        <text class="flowlab" x="330" y="166" text-anchor="end">buys back &amp; burns</text>
+      </svg>
+      <p class="dnote">Every path through the economy either burns <span class="std">$STANDARD</span> or brings the central bank hard assets.</p>
+    </div>
+  </section>
+
+  <!-- step 4 -->
+  <section class="step" data-title="The signal">
+    <span class="num">04 &#183; The signal</span>
+    <h2>One market, one signal</h2>
+    <p>Real central banks watch hundreds of indicators. This one watches net ETH flow: the ETH that entered the pool through buys, minus the ETH that left through sells, per epoch.</p>
+    <p>Price is not the signal because price is cheap to manipulate. Net flow only moves when real capital enters or leaves. An attacker who pushes the signal upward must hand the bank real ETH, which becomes reserves and burned supply. Manipulation funds the defence.</p>
+    <p>One more safeguard. The issuance decision uses the sum of the last two epochs, so a single distorted day cannot move the rate. Fee routing uses the current epoch alone, so defence reacts fast.</p>
+  </section>
+
+  <!-- step 5 -->
+  <section class="step" data-title="The two regimes">
+    <span class="num">05 &#183; The two regimes</span>
+    <h2>Expansion and contraction</h2>
+    <p>Every epoch is either expansion or contraction, set by the sign of net flow. Positive flow is expansion. Zero or negative flow is contraction. Four things change:</p>
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr><th></th><th class="in">Expansion</th><th class="out">Contraction</th></tr></thead>
+      <tbody>
+        <tr><td>Issuance</td><td class="in">rises one step per epoch</td><td class="out">cut immediately</td></tr>
+        <tr><td>Fee routing</td><td class="in">expansion vault buys hard reserves</td><td class="out">contraction vault buys <span class="std">$STANDARD</span> and burns it</td></tr>
+        <tr><td>Licences</td><td class="in">cost more</td><td class="out">cost less</td></tr>
+        <tr><td>Exits</td><td class="in">cheap, near the fee floor</td><td class="out">expensive, the fee rises with exit volume</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>The steps are asymmetric by design. Raises are earned slowly and cuts land at once. <strong>The bank turns defensive faster than it turns generous.</strong> A downturn triggers all three defences in the same epoch: slower issuance, buybacks, and higher exit fees.</p>
+  </section>
+
+  <!-- step 6 -->
+  <section class="step" data-title="Being a banker">
+    <span class="num">06 &#183; Being a banker</span>
+    <h2>How you earn, and how you cash out</h2>
+    <p>A charter accrues issuance continuously, in proportion to its share of all branches in the system. There is nothing to claim or harvest. The balance simply grows.</p>
+    <p>Earned currency supports exactly two moves:</p>
+    <ul class="plain">
+      <li><strong>Reinvest.</strong> Buy an expansion licence at the daily auction and open another branch, up to ten. Licences are paid in <span class="std">$STANDARD</span> and the full payment is burned. Your share of future issuance grows and total supply shrinks. Individual growth and supply reduction are the same action.</li>
+      <li><strong>Cash out.</strong> Retire a branch. Its share of your balance is minted to your wallet, minus the resolution fee, and the branch is gone permanently. Value cannot be extracted while keeping the vehicle that produced it. Retiring the last branch burns the charter, and the only way back in is a new charter at auction.</li>
+    </ul>
+    <div class="callout"><strong>Every withdrawal permanently reduces the withdrawer's future income.</strong> The design rewards patience and prices extraction.</div>
+  </section>
+
+  <!-- step 7 -->
+  <section class="step" data-title="The exit door">
+    <span class="num">07 &#183; The exit door</span>
+    <h2>Why a bank run works differently here</h2>
+    <p>The classic failure mode of any bank is the run. Everyone tries to leave at once. This design changes the payoff of running.</p>
+    <div class="compare">
+      <div class="card bad">
+        <h3>A traditional bank run</h3>
+        <p>Whoever exits first is made whole. Whoever waits absorbs the loss.</p>
+        <p>Running first is always the rational move, so panic feeds itself.</p>
+      </div>
+      <div class="card good">
+        <h3>The exit here</h3>
+        <p>The resolution fee rises as system-wide exits rise, from a small floor in quiet periods to a hard ceiling in a stampede. Your rate locks the moment you commit.</p>
+        <p>Half of every fee is burned. The other half is paid to the bankers who <strong>stayed</strong>. Mass exits transfer value from the impatient to the patient.</p>
+      </div>
+    </div>
+    <p>Withdrawals are never paused and never queued, at any fee level. <strong>The cost of leaving is the only control mechanism.</strong></p>
+  </section>
+
+  <!-- step 8 -->
+  <section class="step" data-title="The long game">
+    <span class="num">08 &#183; The long game</span>
+    <h2>Everything burns</h2>
+    <p>Count the burn paths. Expansion licences are burned in full. Buybacks are burned in full. Half of every resolution fee is burned. Trading fees collected in <span class="std">$STANDARD</span> are burned. New tokens are minted at exactly one moment, a withdrawal, and total issuance is capped at a fixed budget that never resumes once spent.</p>
+    <p>The maximum supply therefore never sits still at one billion. It only ratchets down. The economy consumes its own currency while accumulating hard reserves and permanent liquidity underneath it.</p>
+    <p>Whether this works in practice depends on parameters the whitepaper redacts until launch: the issuance rate, the fee curve, and the initial market depth. That is what the simulator is for.</p>
+  </section>
+
+  <!-- step 9 -->
+  <section class="step" data-title="Honest footnotes">
+    <span class="num">09 &#183; Honest footnotes</span>
+    <h2>Three important caveats</h2>
+    <ul class="plain">
+      <li><strong>This is not a stablecoin.</strong> Nothing pegs the price of <span class="std">$STANDARD</span>. The design strengthens the system's balance sheet over time. The price still floats freely.</li>
+      <li><strong>The launch parameters are not public.</strong> The whitepaper describes the full machinery but redacts every number. Exact behaviour at launch is unknown.</li>
+      <li><strong>This is an experiment.</strong> The whitepaper states it plainly: no accounts, no deposit insurance, and no regulator. Participate only with capital you can afford to lose.</li>
+    </ul>
+  </section>
+
+  <!-- step 10 -->
+  <section class="step" data-title="FAQ" data-pill="FAQ">
+    <span class="num">10 &#183; FAQ</span>
+    <h2>Common questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Do I need a charter to buy <span class="std">$STANDARD</span>?</summary>
+        <p>No. Anyone can trade in the pool. A charter is only required to receive issuance from the central bank.</p>
+      </details>
+      <details>
+        <summary>How do I get a charter?</summary>
+        <p>1,000 Founding Charters were free at genesis, limited to one per wallet. After genesis, new charters sell at a daily Dutch auction in ETH. The daily count starts at zero and is policy controlled.</p>
+      </details>
+      <details>
+        <summary>Can I sell or transfer my charter?</summary>
+        <p>Not at launch. Charters start soulbound. A one-way switch can enable transfers later. A transferred charter moves whole, with its branches and balance.</p>
+      </details>
+      <details>
+        <summary>What backs <span class="std">$STANDARD</span>?</summary>
+        <p>The bank accumulates hard reserve assets such as tokenized gold, plus permanent liquidity in the pool. These strengthen the balance sheet. They are not a redemption claim and there is no peg.</p>
+      </details>
+      <details>
+        <summary>What happens if I go inactive?</summary>
+        <p>A wallet inactive for 30 days can be reported by anyone, and the reporter earns a bounty. The dormant banker pays a 70% revocation fee, the branches close, and the charter burns. Any interaction resets the clock, and a free check-in exists for bankers who only want to hold.</p>
+      </details>
+      <details>
+        <summary>Does issuance run forever?</summary>
+        <p>No. Total issuance is capped at 900 million tokens. Once the budget is spent, base issuance stops permanently and the economy runs on recycled fees.</p>
+      </details>
+      <details>
+        <summary>Can withdrawals be frozen in a crisis?</summary>
+        <p>No. Withdrawals are never paused and never queued at any fee level. The resolution fee is the only control mechanism.</p>
+      </details>
+      <details>
+        <summary>When does it launch, and what are the exact parameters?</summary>
+        <p>The whitepaper redacts every launch value. Final parameters will be announced closer to launch.</p>
+      </details>
+    </div>
+    <div class="cta">
+      <div class="t">
+        <b>Now watch it run</b>
+        <span>Pick a path for the year. Then move the levers the whitepaper redacts and watch a full year recompute.</span>
+      </div>
+      <a class="btn" href="simulator.html">Open the simulator &#8594;</a>
+    </div>
+  </section>
+
+  </main>
+
+  <div class="stepnav">
+    <button class="btn" id="back">&#8592; Back</button>
+    <span class="where" id="where"></span>
+    <button class="btn primary" id="next">Next &#8594;</button>
+    <p class="keyhint">or use <kbd>&#8592;</kbd> <kbd>&#8594;</kbd> on your keyboard</p>
+  </div>
+
+  <p class="foot">
+    Unofficial and unaffiliated. This guide is a plain-language summary of whitepaper v0.1 at <a href="https://standardreserve.xyz">standardreserve.xyz</a>. Nothing here is investment advice.
+  </p>
+</div>
+
+<script>
+(function(){
+"use strict";
+const steps = Array.from(document.querySelectorAll(".step"));
+const progress = document.getElementById("progress");
+const back = document.getElementById("back");
+const next = document.getElementById("next");
+const where = document.getElementById("where");
+let cur = 0;
+
+progress.innerHTML = steps.map((s,i)=>
+  `<button role="tab" data-i="${i}" title="${s.dataset.title}">${s.dataset.pill || String(i+1).padStart(2,"0")}</button>`).join("");
+const pills = Array.from(progress.querySelectorAll("button"));
+
+function show(i, scroll){
+  cur = Math.max(0, Math.min(steps.length-1, i));
+  steps.forEach((s,si)=>s.classList.toggle("on", si===cur));
+  pills.forEach((p,pi)=>{
+    p.classList.toggle("on", pi===cur);
+    p.setAttribute("aria-selected", pi===cur);
+  });
+  back.disabled = cur===0;
+  const last = cur===steps.length-1;
+  next.disabled = last;
+  where.textContent = (cur+1)+" / "+steps.length+" · "+steps[cur].dataset.title;
+  history.replaceState(null, "", "#"+(cur+1));
+  if(scroll!==false) window.scrollTo({top:0});
+}
+
+back.addEventListener("click", ()=>show(cur-1));
+next.addEventListener("click", ()=>show(cur+1));
+pills.forEach(p=>p.addEventListener("click", ()=>show(+p.dataset.i)));
+document.addEventListener("keydown", e=>{
+  if(e.target.tagName==="INPUT" || e.metaKey || e.ctrlKey || e.altKey) return;
+  if(e.key==="ArrowRight" && cur<steps.length-1) show(cur+1);
+  if(e.key==="ArrowLeft") show(cur-1);
+});
+
+const fromHash = parseInt(location.hash.slice(1), 10);
+show(isFinite(fromHash) ? fromHash-1 : 0, false);
+})();
+</script>

@@ -1,0 +1,1131 @@
+<meta charset="utf-8">
+<title>Simulator</title>
+<meta name="description" content="An interactive simulation of the Standard Reserve's monetary policy under growth, steady state, and decay.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+
+<style>
+:root{
+  --bg:#F4F5F3; --surface:#FFFFFF; --surface-2:#EBECE8; --surface-3:#E1E3DD;
+  --line:#D6D8D2; --line-2:#BCBFB8;
+  --ink:#171D1A; --ink-2:#4B534F; --ink-3:#79817D;
+  --brass:#9A6B14; --teal:#0086A6; --rose:#A8446B;
+  --brass-fill:rgba(154,107,20,.14); --teal-fill:rgba(0,134,166,.14); --rose-fill:rgba(168,68,107,.13);
+  --shadow:0 1px 2px rgba(23,29,26,.06), 0 8px 24px -12px rgba(23,29,26,.18);
+  --r:3px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1215; --surface:#11171B; --surface-2:#182026; --surface-3:#1F292F;
+    --line:#253036; --line-2:#37464D;
+    --ink:#E9EEEB; --ink-2:#9EAAA7; --ink-3:#6D7A78;
+    --brass:#C0892B; --teal:#27A3C0; --rose:#C4688C;
+    --brass-fill:rgba(192,137,43,.16); --teal-fill:rgba(39,163,192,.16); --rose-fill:rgba(196,104,140,.15);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1215; --surface:#11171B; --surface-2:#182026; --surface-3:#1F292F;
+  --line:#253036; --line-2:#37464D;
+  --ink:#E9EEEB; --ink-2:#9EAAA7; --ink-3:#6D7A78;
+  --brass:#C0892B; --teal:#27A3C0; --rose:#C4688C;
+  --brass-fill:rgba(192,137,43,.16); --teal-fill:rgba(39,163,192,.16); --rose-fill:rgba(196,104,140,.15);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable}
+.std{
+  background:var(--ink); color:var(--bg);
+  font-family:"IBM Plex Mono",monospace; font-size:.82em; font-weight:500;
+  padding:1px 6px 2px; border-radius:2px; white-space:nowrap; letter-spacing:.02em;
+}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:Archivo,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace; font-variant-numeric:tabular-nums}
+.wrap{max-width:840px; margin:0 auto; padding:28px 22px 56px}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap}
+.credit{display:flex; gap:8px; align-items:baseline; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); flex-wrap:wrap}
+.credit a{color:var(--ink-2); text-decoration:none; border-bottom:1px solid var(--line-2)}
+.credit a:hover{color:var(--ink); border-bottom-color:var(--ink-2)}
+.credit a.contrib{border:1px solid var(--line-2); border-radius:var(--r); padding:3px 9px; margin-left:4px}
+.credit a.contrib:hover{background:var(--surface-2)}
+.pagenav{display:flex; gap:6px}
+.pagenav a{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  text-decoration:none; color:var(--ink-2); border:1px solid var(--line-2); border-radius:var(--r);
+  padding:5px 12px; transition:background .12s;
+}
+.pagenav a:hover{background:var(--surface-2)}
+.pagenav a.on{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+
+/* ---------- header ---------- */
+.masthead{padding-bottom:18px; border-bottom:1px solid var(--line-2)}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+h1{
+  font-family:Newsreader,Georgia,serif; font-optical-sizing:auto;
+  font-weight:400; font-size:clamp(28px,4.4vw,40px); line-height:1.04;
+  margin:14px 0 0; letter-spacing:-.012em; text-wrap:balance;
+}
+.sub{margin:10px 0 0; color:var(--ink-2); max-width:64ch; font-size:14.5px}
+
+/* ---------- notice ---------- */
+.notice{
+  margin-top:18px; padding:11px 14px; border-radius:var(--r);
+  background:var(--surface-2); border:1px solid var(--line);
+  font-size:14px; color:var(--ink-2); display:flex; gap:10px; align-items:flex-start;
+}
+.notice .tag{
+  flex:none; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--brass); border:1px solid var(--brass);
+  padding:1px 6px; border-radius:2px; margin-top:1px;
+}
+
+/* ---------- scenario picker ---------- */
+button{font-family:inherit; cursor:pointer; border-radius:var(--r); transition:background .12s, border-color .12s, box-shadow .12s}
+button:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
+.scenarios{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px}
+@media(max-width:560px){.scenarios{grid-template-columns:1fr}}
+.scn{
+  background:var(--surface); border:1px solid var(--line-2); padding:14px 16px 13px;
+  text-align:left; display:block; color:var(--ink); box-shadow:var(--shadow);
+}
+.scn:hover{background:var(--surface-2)}
+.scn[aria-pressed="true"]{border-color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--ink), var(--shadow)}
+.scn .t{display:flex; align-items:baseline; gap:9px; font-family:Newsreader,Georgia,serif; font-size:20px; font-weight:500}
+.scn .glyph{font-family:"IBM Plex Mono",monospace; font-size:15px}
+.scn .d{font-size:13.5px; color:var(--ink-2); margin-top:4px; line-height:1.45}
+
+/* ---------- tiles ---------- */
+.tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:14px; background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
+@media(max-width:620px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--surface); padding:13px 15px 14px}
+.tile .k{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:5px}
+.tile .v{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:21px; font-weight:500; line-height:1.15; display:block}
+.tile .n{font-size:12.5px; color:var(--ink-3); margin-top:3px; display:block; line-height:1.35}
+.v.brass{color:var(--brass)} .v.teal{color:var(--teal)} .v.rose{color:var(--rose)}
+
+/* ---------- explainer rows ---------- */
+h2.sec{font-family:Newsreader,Georgia,serif; font-weight:500; font-size:26px; margin:38px 0 3px; letter-spacing:-.008em}
+.secnote{color:var(--ink-2); font-size:15px; margin:0 0 10px; max-width:70ch}
+.row{display:grid; grid-template-columns:minmax(240px,300px) minmax(0,1fr); gap:22px; margin-top:26px; align-items:center}
+.row>.sliders{grid-column:1/-1}
+.row .sliderbox{grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); column-gap:26px}
+@media(max-width:920px){.row{grid-template-columns:1fr; gap:12px}}
+.explain .num{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+.explain h3{font-family:Newsreader,Georgia,serif; font-size:24px; font-weight:500; margin:3px 0 8px; letter-spacing:-.005em}
+.explain p{font-size:15px; color:var(--ink-2); margin:0 0 10px; line-height:1.6}
+.explain p strong{color:var(--ink); font-weight:600}
+.cap{
+  font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--brass);
+  border-left:2px solid var(--brass); padding:3px 0 3px 10px; margin:13px 0 0;
+  font-variant-numeric:tabular-nums; line-height:1.6;
+}
+.sliders{display:grid; gap:12px; align-content:start}
+.sliders .head{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3)}
+.sliderbox{display:grid; gap:12px}
+.param label{display:flex; justify-content:space-between; gap:10px; font-size:13.5px; color:var(--ink-2); margin-bottom:4px; align-items:baseline}
+.param .numv{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; color:var(--ink); font-size:13.5px}
+input[type=range]{width:100%; accent-color:var(--brass); height:18px; cursor:pointer; margin:0}
+input[type=range]:focus-visible{outline:2px solid var(--brass); outline-offset:3px}
+
+/* ---------- panels & charts ---------- */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px 14px; box-shadow:var(--shadow)}
+.ptitle{font-family:Newsreader,Georgia,serif; font-size:18.5px; font-weight:500; margin:0 0 10px; letter-spacing:-.005em; color:var(--ink-2)}
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--ink-2); margin-top:9px}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.swatch{width:11px; height:3px; border-radius:2px; flex:none}
+.swatch.sq{height:9px; width:9px; border-radius:2px}
+.chartbox{position:relative; width:100%}
+canvas{display:block; width:100%; height:100%; touch-action:pan-y}
+.tip{
+  position:absolute; pointer-events:none; opacity:0; transform:translate(-50%,-118%);
+  background:var(--ink); color:var(--bg); padding:7px 10px; border-radius:var(--r);
+  font-family:"IBM Plex Mono",monospace; font-size:12.5px; line-height:1.5; white-space:nowrap;
+  transition:opacity .1s; z-index:5; font-variant-numeric:tabular-nums;
+}
+.tip b{font-weight:600}
+
+/* ---------- receipt & tables ---------- */
+.receipt{font-family:"IBM Plex Mono",monospace; font-size:14px; font-variant-numeric:tabular-nums; line-height:2}
+.receipt .rrow{display:flex; justify-content:space-between; gap:16px; border-bottom:1px dotted var(--line)}
+.receipt .rrow.tot{border-bottom:0; border-top:1px solid var(--line-2); margin-top:5px; padding-top:5px; font-weight:600}
+.receipt .op{color:var(--ink-3); width:1.4em; display:inline-block}
+.kv{display:flex; justify-content:space-between; gap:16px; padding:7px 0; border-bottom:1px dotted var(--line); font-size:14.5px}
+.kv:last-child{border-bottom:0}
+.kv .lab{color:var(--ink-2)}
+.kv .val{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-weight:500}
+table.tbl{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
+table.tbl th,table.tbl td{text-align:left; padding:6px 10px 6px 0; border-bottom:1px solid var(--line)}
+table.tbl th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+table.tbl td.n{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:right}
+.scroll{overflow-x:auto}
+ul.notes{font-size:14px; color:var(--ink-2); margin:8px 0 0; padding-left:18px}
+ul.notes li{margin-bottom:5px}
+.foot{margin-top:28px; padding-top:14px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-3)}
+.foot a{color:var(--ink-2)}
+@media (prefers-reduced-motion: reduce){*{transition:none !important; animation:none !important}}
+</style>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <nav class="pagenav">
+      <a href="index.html">Explainer</a>
+      <a class="on" href="simulator.html">Simulator</a>
+    </nav>
+    <div class="credit">
+      <span>site by</span>
+      <a href="https://x.com/0xlonetree" target="_blank" rel="noopener">@0xlonetree</a>
+      <span>&#183;</span>
+      <span>protocol</span>
+      <a href="https://x.com/standard_rsv" target="_blank" rel="noopener">@standard_rsv</a>
+      <span>&#183;</span>
+      <a href="https://www.standardreserve.xyz/whitepaper/" target="_blank" rel="noopener">whitepaper</a>
+      <!-- TODO: point at the real repo once it exists -->
+      <a class="contrib" href="https://github.com/0xlonetree/standard-sim" target="_blank" rel="noopener">contribute &#8599;</a>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <span class="eyebrow">Standard Reserve &#183; unofficial simulator</span>
+    <h1>Simulator</h1>
+    <p class="sub">Pick how capital behaves for one year. The simulator runs the whitepaper's machinery through 365 simulated days: issuance, fee routing, buybacks, and exit pricing. Move any slider and the full year recomputes as you drag. New to the protocol? <a href="index.html" style="color:var(--ink)">Start with the explainer</a>.</p>
+  </header>
+
+  <div class="notice">
+    <span class="tag">Assumed</span>
+    <span>Whitepaper v0.1 publishes the machinery but redacts every launch number. Each redacted value is a slider below, set to a plausible default. The structure follows the paper. The numbers, and the trader behaviour in each scenario, are assumptions you can change.</span>
+  </div>
+
+  <h2 class="sec">Choose the year</h2>
+  <p class="secnote">Four paths for the same economy. The only difference is trader behaviour: ETH in through buys, ETH out through sells, and how many bankers retire branches.</p>
+  <div class="scenarios" role="group" aria-label="Scenario">
+    <button class="scn" data-scn="growth" aria-pressed="true">
+      <span class="t"><span class="glyph" style="color:var(--brass)">&#8599;</span>Growth</span>
+      <span class="d">Net inflow all year. Policy loosens, reserves grow, and expansion burns supply.</span>
+    </button>
+    <button class="scn" data-scn="steady" aria-pressed="false">
+      <span class="t"><span class="glyph" style="color:var(--ink-3)">&#8594;</span>Steady state</span>
+      <span class="d">Inflow and outflow alternate in long waves and the year nets out near zero. Watch which way policy leans.</span>
+    </button>
+    <button class="scn" data-scn="decay" aria-pressed="false">
+      <span class="t"><span class="glyph" style="color:var(--teal)">&#8600;</span>Decay</span>
+      <span class="d">Inflow fades, a panic hits mid-year, then a long bleed. The three defences fire at once.</span>
+    </button>
+    <button class="scn" data-scn="real" aria-pressed="false">
+      <span class="t"><span class="glyph" style="color:var(--rose)">&#8767;</span>Real market</span>
+      <span class="d">Up months and down months with random drift, one dump and one rally. The closest to a real year.</span>
+    </button>
+  </div>
+
+  <h2 class="sec">Where the economy ends up</h2>
+  <p class="secnote">The state of the system after 365 simulated days, under the scenario and parameters currently selected.</p>
+  <div class="tiles">
+    <div class="tile"><span class="k">Circulating</span><b class="v mono" id="t-circ">&#8212;</b><span class="n">of <span id="t-max" class="mono">&#8212;</span> max</span></div>
+    <div class="tile"><span class="k">Price</span><b class="v mono teal" id="t-price">&#8212;</b><span class="n" id="t-pricen">ETH per 1M</span></div>
+    <div class="tile"><span class="k">Multiplier m</span><b class="v mono" id="t-mult">&#8212;</b><span class="n" id="t-multn">issuance rate</span></div>
+    <div class="tile"><span class="k">Peak exit fee</span><b class="v mono rose" id="t-peak">&#8212;</b><span class="n" id="t-peakn">&#8212;</span></div>
+    <div class="tile"><span class="k">Hard reserves</span><b class="v mono brass" id="t-res">&#8212;</b><span class="n">gold, never sold</span></div>
+    <div class="tile"><span class="k">Buybacks</span><b class="v mono teal" id="t-bb">&#8212;</b><span class="n" id="t-bbn">&#8212;</span></div>
+    <div class="tile"><span class="k">Burned</span><b class="v mono" id="t-burn">&#8212;</b><span class="n" id="t-burnn">&#8212;</span></div>
+    <div class="tile"><span class="k">Branches</span><b class="v mono" id="t-branches">&#8212;</b><span class="n"><span id="t-charters" class="mono">&#8212;</span> charters</span></div>
+  </div>
+
+  <!-- 01 · net flow -->
+  <div class="row">
+    <div class="explain">
+      <span class="num">01 &#183; The signal</span>
+      <h3>The bank reads one number</h3>
+      <p><strong>What you see.</strong> Net ETH flow through the pool, week by week: ETH in from buys minus ETH out from sells. Brass weeks are net inflow and teal weeks are net outflow. This is the central bank's only input. Not price, not volume, not votes.</p>
+      <p><strong>Why it matters.</strong> Price can be moved with very little capital. Net flow only moves when real capital enters or leaves. The issuance decision sums the last two epochs, so one manipulated day cannot swing the rate. Fee routing reads the current epoch alone, so defence reacts fast.</p>
+      <div class="cap" id="cap-flow">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">Net ETH flow, weekly</h4>
+      <div class="chartbox" style="height:200px"><canvas id="ch-flow"></canvas><div class="tip" id="tip-flow"></div></div>
+      <div class="legend">
+        <span><i class="swatch sq" style="background:var(--brass)"></i>Net inflow</span>
+        <span><i class="swatch sq" style="background:var(--teal)"></i>Net outflow</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 · multiplier -->
+  <div class="row three">
+    <div class="explain">
+      <span class="num">02 &#183; The response</span>
+      <h3>Cuts are instant, raises are earned</h3>
+      <p><strong>What you see.</strong> The policy multiplier <em>m</em>, which scales daily issuance. Dashed lines are its floor and ceiling. Every epoch it moves one step: up on sustained inflow, down on outflow.</p>
+      <p><strong>Why it matters.</strong> The step sizes are asymmetric by design. The default cut is three times the raise, so the bank turns defensive faster than it turns generous. Set the cut equal to the raise and watch how much longer dilution runs in the decay scenario.</p>
+      <div class="cap" id="cap-mult">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">Policy multiplier m, by epoch</h4>
+      <div class="chartbox" style="height:200px"><canvas id="ch-mult"></canvas><div class="tip" id="tip-mult"></div></div>
+      <div class="legend"><span><i class="swatch" style="background:var(--ink-2)"></i>Multiplier m</span><span><i class="swatch" style="background:var(--line-2)"></i>Floor and ceiling</span></div>
+    </div>
+    <div class="sliders">
+      <span class="head">Assumed &#183; monetary policy</span>
+      <div class="sliderbox" data-keys="baseIssue,mRaise,mCut,mCeil,mFloor"></div>
+    </div>
+  </div>
+
+  <!-- 03 · supply -->
+  <div class="row">
+    <div class="explain">
+      <span class="num">03 &#183; The currency</span>
+      <h3>Supply is a receipt</h3>
+      <p><strong>What you see.</strong> Circulating supply against everything burned so far. The receipt below the chart is whitepaper equation 3.1, an identity that holds at every block: genesis liquidity, plus withdrawal mints, minus cumulative burns.</p>
+      <p><strong>Why it matters.</strong> Tokens are minted at exactly one moment, a withdrawal. They are burned constantly: expansion licences in full, buybacks in full, half of every exit fee, and all trading fees paid in <span class="std">$STANDARD</span>. Burned tokens never return, so the maximum supply only decreases. When the burn line gains on the supply line, the economy is eating rather than bleeding.</p>
+      <div class="cap" id="cap-supply">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">Circulating vs burned</h4>
+      <div class="chartbox" style="height:200px"><canvas id="ch-supply"></canvas><div class="tip" id="tip-supply"></div></div>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--rose)"></i>Circulating supply</span>
+        <span><i class="swatch" style="background:var(--ink-3)"></i>Burned, cumulative</span>
+      </div>
+      <div class="receipt" style="margin-top:14px">
+        <div class="rrow"><span><span class="op"></span>Genesis liquidity, locked forever</span><span>100,000,000</span></div>
+        <div class="rrow"><span><span class="op">+</span>Withdrawal mints</span><span id="r-mint">0</span></div>
+        <div class="rrow"><span><span class="op">&#8722;</span>Cumulative burns</span><span id="r-burn">0</span></div>
+        <div class="rrow tot"><span><span class="op"></span>Circulating supply</span><span id="r-circ">100,000,000</span></div>
+      </div>
+      <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>Where burns came from</th><th style="text-align:right">Tokens</th><th style="text-align:right">Share</th></tr></thead>
+        <tbody id="burn-tbl"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 · price -->
+  <div class="row three">
+    <div class="explain">
+      <span class="num">04 &#183; The market</span>
+      <h3>One pool, and a floor that only grows</h3>
+      <p><strong>What you see.</strong> The pool price on a log scale, in ETH per million <span class="std">$STANDARD</span>. The pool is a constant-product market seeded with the 100M genesis tokens. The position is protocol-owned, full-range, and can never be withdrawn.</p>
+      <p><strong>Why it matters.</strong> This pool is the only way in or out of the economy, which is what makes net flow measurable. Every swap pays a fee. 15% of all fee ETH becomes permanent protocol-owned liquidity, half of it swapped to <span class="std">$STANDARD</span> and paired. Exit liquidity deepens over time and no one can remove it.</p>
+      <div class="cap" id="cap-price">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">Price, log scale &#183; ETH per 1M <span class="std">$STANDARD</span></h4>
+      <div class="chartbox" style="height:200px"><canvas id="ch-price"></canvas><div class="tip" id="tip-price"></div></div>
+      <div class="legend"><span><i class="swatch" style="background:var(--teal)"></i>ETH per 1M <span class="std">$STANDARD</span></span></div>
+    </div>
+    <div class="sliders">
+      <span class="head">Assumed &#183; market</span>
+      <div class="sliderbox" data-keys="tradeFeeBps,seedEth"></div>
+    </div>
+  </div>
+
+  <!-- 05 · defense -->
+  <div class="row">
+    <div class="explain">
+      <span class="num">05 &#183; The vaults</span>
+      <h3>Volatility becomes balance sheet</h3>
+      <p><strong>What you see.</strong> Where fee ETH went. Each epoch, 70% of all protocol ETH routes to the active vault. In expansion epochs it buys hard reserve assets such as tokenized gold. In contraction epochs it buys <span class="std">$STANDARD</span> on the open market and burns everything it buys.</p>
+      <p><strong>Why it matters.</strong> Fees are paid on buys and sells alike, so the bank converts volatility in either direction into balance sheet. Buybacks execute in small hourly steps, at most 10% of the vault or 0.2% of pool depth per tick, so defence cannot be baited into one blockable shot. Unspent balance rolls forward and the vault can never sell.</p>
+      <div class="cap" id="cap-def">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">Cumulative ETH: reserves vs buybacks</h4>
+      <div class="chartbox" style="height:200px"><canvas id="ch-def"></canvas><div class="tip" id="tip-def"></div></div>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--brass)"></i>Hard reserves bought</span>
+        <span><i class="swatch" style="background:var(--teal)"></i>ETH spent on buy &amp; burn</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 · exit door -->
+  <div class="row three">
+    <div class="explain">
+      <span class="num">06 &#183; The exit door</span>
+      <h3>Leaving is priced by the crowd</h3>
+      <p><strong>What you see.</strong> The resolution fee charged on withdrawals, across the year. It rises quadratically with exit pressure, which is withdrawals over the trailing 7 days measured against everything still held at the bank. The curve runs from a quiet floor to a hard ceiling. Your rate locks the moment you commit.</p>
+      <p><strong>Why it matters.</strong> In a traditional bank run, whoever exits first is made whole and whoever waits absorbs the loss. Running first is always correct. Here, heavy exit volume raises the fee on the exiters themselves. Half of what they pay is burned and <strong>half goes to the bankers who stayed</strong>. Mass exits transfer value from the impatient to the patient. Withdrawals are never paused. The cost of leaving is the only control mechanism.</p>
+      <div class="cap" id="cap-exit">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">Resolution fee through the year</h4>
+      <div class="chartbox" style="height:200px"><canvas id="ch-fee"></canvas><div class="tip" id="tip-fee"></div></div>
+      <div class="legend"><span><i class="swatch" style="background:var(--rose)"></i>Fee charged to exiters</span><span><i class="swatch" style="background:var(--line-2)"></i>Ceiling</span></div>
+      <h4 class="ptitle" style="margin-top:16px">Where the fees went</h4>
+      <div class="chartbox" style="height:150px"><canvas id="ch-split"></canvas><div class="tip" id="tip-split"></div></div>
+    </div>
+    <div class="sliders">
+      <span class="head">Assumed &#183; exit pricing</span>
+      <div class="sliderbox" data-keys="feeCeil,feeSat"></div>
+    </div>
+  </div>
+
+  <!-- 07 · one charter -->
+  <div class="row three">
+    <div class="explain">
+      <span class="num">07 &#183; One banker</span>
+      <h3>One passive charter</h3>
+      <p><strong>What you see.</strong> The accrued balance of one charter that holds a single branch and takes no action all year. Issuance streams to it continuously, pro rata across all branches in the system, plus its share of every exit fee paid by leavers.</p>
+      <p><strong>Why it matters.</strong> Balances are ledger entries. Tokens are minted only when a banker withdraws. Withdrawing has a cost beyond the fee: it permanently retires the branch that was earning. Value cannot be extracted while keeping the vehicle that produced it. Retiring the last branch burns the charter, and the only way back in is a new charter at auction.</p>
+      <div class="cap" id="cap-user">&#8212;</div>
+    </div>
+    <div class="panel">
+      <h4 class="ptitle">One passive charter's balance</h4>
+      <div class="chartbox" style="height:180px"><canvas id="ch-user"></canvas><div class="tip" id="tip-user"></div></div>
+      <div class="legend"><span><i class="swatch" style="background:var(--brass)"></i>Accrued <span class="std">$STANDARD</span>, unwithdrawn</span></div>
+      <div style="margin-top:12px">
+        <div class="kv"><span class="lab">Accrued after one year</span><span class="val" id="b-accr">&#8212;</span></div>
+        <div class="kv"><span class="lab">Of which, exit fees from leavers</span><span class="val" id="b-stayed" style="color:var(--brass)">&#8212;</span></div>
+        <div class="kv"><span class="lab">Exit fee if you retire on day 365</span><span class="val" id="b-feeq" style="color:var(--rose)">&#8212;</span></div>
+        <div class="kv"><span class="lab">You would receive</span><span class="val" id="b-netq">&#8212;</span></div>
+        <div class="kv"><span class="lab">Worth at market</span><span class="val" id="b-ethq">&#8212;</span></div>
+      </div>
+    </div>
+    <div class="sliders">
+      <span class="head">Assumed &#183; crowd behaviour</span>
+      <div class="sliderbox" data-keys="licPayback"></div>
+    </div>
+  </div>
+
+  <h2 class="sec">What is fixed, what is assumed, what is left out</h2>
+  <p class="secnote">The paper states some things outright, redacts others, and defers a few mechanisms entirely. This model keeps the three lists separate.</p>
+  <div class="panel">
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr><th>Fixed by whitepaper v0.1</th><th style="text-align:right">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Hard cap</td><td class="n">1,000,000,000</td></tr>
+        <tr><td>Genesis liquidity, protocol-owned, locked</td><td class="n">100,000,000</td></tr>
+        <tr><td>Issuance budget (stops permanently when spent)</td><td class="n">900,000,000</td></tr>
+        <tr><td>Fee split: active vault / POL / team</td><td class="n">70 / 15 / 15</td></tr>
+        <tr><td>Buyback per hourly tick</td><td class="n">min(10% of vault, 0.2% of pool)</td></tr>
+        <tr><td>Branches per charter</td><td class="n">1 to 10</td></tr>
+        <tr><td>Founding charters, free at genesis</td><td class="n">1,000</td></tr>
+        <tr><td>Licence auction: daily Dutch, paid in <span class="std">$STANDARD</span>, burned</td><td class="n">100 / day &#183; opens at 2&#215; close</td></tr>
+        <tr><td>Licence floor</td><td class="n">&#8776; 2 days of one branch's yield</td></tr>
+        <tr><td>Resolution fee: burned / paid to stayers</td><td class="n">50 / 50</td></tr>
+        <tr><td>Withdrawals paused or queued</td><td class="n">never</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <ul class="notes">
+      <li><strong>Assumed</strong> (redacted in the paper, sliders above): epoch length = 1 day, base issuance, multiplier range and step sizes, trading fee, exit-fee floor of 2%, exit-fee ceiling and saturation point, genesis ETH depth, and how eagerly the crowd buys licences.</li>
+      <li><strong>Assumed</strong>: trader behaviour in each scenario is scripted with light deterministic noise. Sell-side trading fees are taken in <span class="std">$STANDARD</span> and burned (&#167;11).</li>
+      <li><strong>Not modelled</strong>: charter auctions in ETH (the paper starts their daily count at zero), dormant-banker revocation (&#167;10), transferable charters (&#167;12, future), and gas or MEV.</li>
+    </ul>
+  </div>
+
+  <p class="foot">
+    Unofficial and unaffiliated. Built by reading whitepaper v0.1 at <a href="https://standardreserve.xyz">standardreserve.xyz</a> and implementing the mechanisms it describes. Where the paper redacts a number, this model substitutes an assumption you can change. Where the paper says a safeguard exists only in the deployed contracts, this model does not include it. Nothing here is a prediction of launch behaviour and nothing here is investment advice.
+  </p>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   FIXED CONSTANTS — stated in whitepaper v0.1
+   ============================================================ */
+const HARD_CAP = 1e9;
+const GENESIS  = 1e8;
+const BUDGET   = 9e8;
+const SPLIT_ACTIVE = 0.70, SPLIT_POL = 0.15, SPLIT_TEAM = 0.15;
+const BB_VAULT_FRAC = 0.10;    // 10% of vault balance per hourly tick
+const BB_POOL_FRAC  = 0.002;   // 0.2% of pool reserves per hourly tick
+const BRANCH_MAX = 10;
+const LICENSES_PER_DAY = 100;
+const LICENSE_OPEN_MULT = 2;   // licence auction opens at 2x previous close
+const FEE_BURN_SHARE = 0.5;    // half of the resolution fee burned, half to stayers
+const DAYS = 365, HOURS = DAYS*24;
+
+/* ============================================================
+   ASSUMED PARAMETERS — redacted in v0.1, exposed as sliders
+   ============================================================ */
+const P = {
+  baseIssue:   1_000_000,  // $STANDARD per day at m = 1
+  mLaunch:     1.00,
+  mFloor:      0.25,
+  mCeil:       3.00,
+  mRaise:      0.10,       // per epoch, sustained inflow
+  mCut:        0.30,       // per epoch, outflow — deliberately larger
+  tradeFeeBps: 100,        // 1%
+  feeFloor:    0.02,       // resolution fee floor
+  feeCeil:     0.45,       // resolution fee ceiling
+  feeSat:      0.25,       // exit pressure at which the fee saturates
+  licPayback:  10,         // days of branch yield a licence buyer will pay
+  seedEth:     1200        // ETH paired with genesis liquidity
+};
+const SPEC = {
+  baseIssue:  ["Base issuance",       200_000, 5_000_000, 100_000, v=>fmt(v)+" / day"],
+  mRaise:     ["Raise per epoch",     0.02, 0.5, 0.02,    v=>"+"+v.toFixed(2)],
+  mCut:       ["Cut per epoch",       0.05, 1.0, 0.05,    v=>"−"+v.toFixed(2)],
+  mCeil:      ["Multiplier ceiling",  1.5, 6, 0.25,       v=>v.toFixed(2)+"×"],
+  mFloor:     ["Multiplier floor",    0.05, 1, 0.05,      v=>v.toFixed(2)+"×"],
+  tradeFeeBps:["Trading fee",         10, 300, 10,        v=>(v/100).toFixed(2)+"%"],
+  seedEth:    ["Genesis ETH depth",   300, 5000, 100,     v=>fmt(v)+" ETH"],
+  feeCeil:    ["Exit fee ceiling",    0.10, 0.90, 0.05,   v=>Math.round(v*100)+"%"],
+  feeSat:     ["Fee saturates when",  0.05, 0.60, 0.05,   v=>Math.round(v*100)+"% exit in 7d"],
+  licPayback: ["Crowd pays up to",    2, 40, 1,           v=>v+" days of yield"]
+};
+
+/* ============================================================
+   SCENARIOS — hourly trader behaviour, deterministic + seeded noise
+   ============================================================ */
+function mulberry32(a){
+  return function(){
+    a|=0; a=a+0x6D2B79F5|0;
+    let t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296;
+  };
+}
+// Trade volume scales with pool depth, as it does in real markets.
+// vol:   gross hourly buy volume as a fraction of the pool's ETH side
+// ratio: sell volume as a multiple of buy volume (net flow ≈ vol·(1−ratio))
+// exit:  fraction of branches retired per hour
+const SCN = {
+  growth:{seed:11, fn:d=>({
+    vol:0.0016*(1+0.15*Math.sin(d/9)), ratio:0.90, exit:0.00013})},
+  steady:{seed:23, fn:d=>({
+    vol: d<10 ? 0.0020 : 0.0022,
+    ratio: d<10 ? 0.85 : 1+0.20*Math.sin(2*Math.PI*(d-10)/56),
+    exit:0.00028})},
+  decay:{seed:37, fn:d=>{
+    if(d<25) return {vol:0.0020, ratio:0.85, exit:0.0002};
+    const t=Math.min(1,(d-25)/125);
+    const bell=Math.exp(-Math.pow((d-165)/16,2));       // the mid-year panic
+    let vol=0.0020-0.0008*t+0.004*bell, ratio=0.90+0.45*t+1.2*bell, exit=0.0002+0.0014*t+0.006*bell;
+    if(d>210){ const r=Math.min(1,(d-210)/80); ratio-=0.32*r; exit-=0.0009*r; }
+    return {vol:Math.max(0.0004,vol), ratio:Math.max(0.2,ratio), exit:Math.max(0.0001,exit)};
+  }},
+  // A year that looks like a market: overlapping waves plus a seeded weekly
+  // random walk, one sharp dump, one late rally.
+  real:{seed:53, fn:(function(){
+    const rw = mulberry32(97), drift=[]; let acc=0;
+    for(let w=0; w<54; w++){ acc = Math.max(-0.26, Math.min(0.26, acc+(rw()-0.5)*0.16)); drift.push(acc); }
+    return d=>{
+      if(d<12) return {vol:0.0019, ratio:0.85, exit:0.0002};   // launch inflow
+      const w = Math.min(53, Math.floor(d/7));
+      const wave = 0.10*Math.sin(2*Math.PI*d/58) + 0.07*Math.sin(2*Math.PI*d/19+2.1);
+      const dump = Math.exp(-Math.pow((d-150)/9,2));           // sharp mid-year dump
+      const rally= Math.exp(-Math.pow((d-235)/14,2));          // autumn rally
+      const recover = d>170 ? -0.06*Math.min(1,(d-170)/40) : 0;   // dip-buyers after the dump
+      return {
+        vol:  0.0021 + 0.0020*dump + 0.0010*rally,
+        ratio:Math.max(0.3, 1.0 + wave + drift[w] + 0.72*dump - 0.30*rally + recover),
+        exit: Math.max(0.0001, 0.00030 + 0.0028*dump)
+      };
+    };
+  })()}
+};
+let scenario="growth";
+
+/* ============================================================
+   STATE
+   ============================================================ */
+function fresh(){
+  return {
+    hour:0, epoch:0,
+    poolEth:P.seedEth, poolStd:GENESIS,
+    walletStd:0,                 // tokens held outside the pool; you cannot sell what you never bought
+    m:P.mLaunch,
+    epochFlow:0, epochFee:0, flowHist:[],
+    cumIssued:0, mints:0,
+    burnLic:0, burnBuyback:0, burnFee:0, burnTradeFee:0,
+    bankBal:0,                   // accrued, unminted, across all bankers
+    branches:1000, charters:1000,
+    reserves:0, conVault:0, bbEth:0, polEth:0, polStd:0, team:0,
+    peakFee:0, peakPressure:0, peakDay:0,
+    firstCeil:0, firstFloor:0, budgetDay:0,
+    wHist:new Array(168).fill(0), wPtr:0,     // rolling 7-day withdrawals, hourly buckets
+    licLastClose:0, licSoldToday:0,
+    feeToStayersTotal:0,
+    user:{branches:1, bal:0, stayed:0}        // the passive charter
+  };
+}
+
+/* ============================================================
+   DERIVED
+   ============================================================ */
+const burnTotal   = s => s.burnLic + s.burnBuyback + s.burnFee + s.burnTradeFee;
+const circulating = s => GENESIS + s.mints - burnTotal(s);
+const maxSupply   = s => HARD_CAP - burnTotal(s);
+const price       = s => s.poolEth / s.poolStd;
+const trailingW   = s => s.wHist.reduce((a,b)=>a+b,0);
+
+function exitPressure(s){
+  const W = trailingW(s);
+  return W / Math.max(s.bankBal + W, 1);
+}
+function resolutionFee(s){
+  const q = Math.min(exitPressure(s) / P.feeSat, 1);
+  return P.feeFloor + (P.feeCeil - P.feeFloor) * q * q;   // quadratic, per §9
+}
+const branchYield  = s => P.baseIssue * s.m / Math.max(s.branches,1);
+const licenseFloor = s => 2 * branchYield(s);             // ≈ two days of one branch's yield
+function licensePrice(s){
+  const floor = licenseFloor(s);
+  const start = (s.licLastClose>0 ? s.licLastClose : floor) * LICENSE_OPEN_MULT;
+  const t = (s.hour % 24) / 24;
+  return start * Math.pow(floor/start, t);                // exponential decay, eq 7.1
+}
+
+/* ============================================================
+   POOL — constant product; traders pay the fee on the input token
+   ============================================================ */
+function buyWithEth(s, ethIn, asFlow, feeFree){
+  if(ethIn<=0) return {std:0, fee:0};
+  const fee = feeFree ? 0 : ethIn * (P.tradeFeeBps/10000);
+  const net = ethIn - fee;
+  const k = s.poolEth * s.poolStd;
+  const stdOut = s.poolStd - k/(s.poolEth + net);
+  s.poolEth += net; s.poolStd -= stdOut;
+  if(asFlow) s.epochFlow += ethIn;
+  return {std:stdOut, fee};
+}
+function sellStd(s, stdIn, asFlow){
+  if(stdIn<=0) return 0;
+  const burned = stdIn * (P.tradeFeeBps/10000);   // $STANDARD trading fees are always burned
+  const net = stdIn - burned;
+  const k = s.poolEth * s.poolStd;
+  const ethOut = s.poolEth - k/(s.poolStd + net);
+  s.poolStd += net; s.poolEth -= ethOut;
+  s.burnTradeFee += burned;
+  if(asFlow) s.epochFlow -= ethOut;
+  return ethOut;
+}
+
+/* ============================================================
+   FEE ROUTER — 70 active vault / 15 POL / 15 team.
+   Routed once per epoch, at close, by that epoch's sign (§4, §11).
+   ============================================================ */
+function routeFees(s, eth, expansion){
+  if(eth<=0) return;
+  const active = eth*SPLIT_ACTIVE, pol = eth*SPLIT_POL;
+  s.team += eth*SPLIT_TEAM;
+  if(expansion) s.reserves += active;   // buys hard reserve assets
+  else          s.conVault += active;   // queued to buy & burn
+  // POL: half swapped to $STANDARD, paired, added forever. Protocol swaps
+  // are excluded from the flow signal and pay no fee to themselves.
+  const bought = buyWithEth(s, pol/2, false, true).std;
+  s.poolEth += pol/2;
+  s.poolStd += bought;
+  s.polEth += pol/2; s.polStd += bought;
+}
+
+/* ============================================================
+   WITHDRAWAL — the crowd retires branches and pays the resolution fee
+   ============================================================ */
+function crowdRetire(s, n){
+  const hb   = s.branches - s.user.branches;      // crowd's branches
+  const hbal = s.bankBal - s.user.bal;            // crowd's ledger balance
+  if(hb<=1 || hbal<=0) return;
+  n = Math.min(n, hb-1);                          // the crowd never fully empties
+  if(n<=0) return;
+
+  const released = hbal * (n/hb);
+  const fee      = released * resolutionFee(s);   // rate locks at commit
+  const burned   = fee * FEE_BURN_SHARE;
+  const stayers  = fee - burned;
+  const net      = released - fee;
+
+  // `net` is minted to wallets. The burned half of the fee was never minted,
+  // so it is minted and destroyed in the same step to keep equation 3.1 exact.
+  s.mints     += net + burned;
+  s.burnFee   += burned;
+  s.walletStd += net;
+  s.bankBal   -= released;
+
+  // half the fee is credited to everyone still at the bank, pro rata
+  const remaining = s.branches - n;
+  s.bankBal += stayers;
+  s.feeToStayersTotal += stayers;
+  const share = stayers * (s.user.branches/remaining);
+  s.user.bal += share; s.user.stayed += share;
+
+  s.branches -= n;
+  const dissolve = Math.min(s.charters-1, Math.round(n * (s.charters/Math.max(s.branches+n,1))));
+  s.charters = Math.max(1, s.charters - dissolve);
+
+  s.wHist[s.wPtr] += released;
+}
+
+/* ============================================================
+   ONE HOUR
+   ============================================================ */
+function tick(s, cfg, rng){
+  const d = s.hour/24;
+  const sh = cfg.fn(d);
+  const n1 = 0.75 + 0.5*rng(), n2 = 0.75 + 0.5*rng();
+
+  // 1 — trading. Net flow is measured here and nowhere else.
+  const b = buyWithEth(s, s.poolEth*sh.vol*n1, true, false);
+  s.walletStd += b.std;
+  s.epochFee  += b.fee;
+
+  // sellers can only sell what is actually held outside the pool
+  const sellTarget = s.poolEth*sh.vol*sh.ratio*n2;   // ETH-denominated
+  const stdIn = Math.min(sellTarget/Math.max(price(s),1e-12), s.poolStd*0.02, s.walletStd);
+  if(stdIn > 0){ s.walletStd -= stdIn; sellStd(s, stdIn, true); }
+
+  // 2 — issuance streams continuously, split pro rata across every branch
+  const rem   = Math.max(0, BUDGET - s.cumIssued);
+  const issue = Math.min(P.baseIssue * s.m / 24, rem);
+  if(issue>0 && s.branches>0){
+    s.cumIssued += issue; s.bankBal += issue;
+    s.user.bal += issue * (s.user.branches/s.branches);
+    if(s.cumIssued >= BUDGET && !s.budgetDay) s.budgetDay = Math.floor(d)+1;
+  }
+
+  // 3 — contraction vault buys $STANDARD and burns all of it, in small steps
+  if(s.conVault > 0){
+    const spend = Math.min(BB_VAULT_FRAC*s.conVault, BB_POOL_FRAC*s.poolEth);
+    if(spend > 1e-9){
+      const got = buyWithEth(s, spend, false, true).std;  // protocol buy, excluded from the signal
+      s.conVault -= spend;
+      s.bbEth += spend;
+      s.burnBuyback += got;                               // burns everything it buys
+    }
+  }
+
+  // 4 — licence auction: price decays from 2x yesterday's close toward the floor
+  if(s.hour % 24 === 0) s.licSoldToday = 0;
+  const lic = licensePrice(s);
+  const crowdBal = s.bankBal - s.user.bal;
+  const willing  = P.licPayback * branchYield(s) * (s.epochFlow > 0 ? 1 : 0.55);
+  if(lic <= willing && s.licSoldToday < LICENSES_PER_DAY && s.charters*BRANCH_MAX > s.branches){
+    const n = Math.min(6, LICENSES_PER_DAY - s.licSoldToday, s.charters*BRANCH_MAX - s.branches);
+    const cost = n * lic;
+    if(n > 0 && crowdBal > cost*1.5){
+      s.bankBal -= cost;
+      s.mints += cost; s.burnLic += cost;   // paid from earned balance, 100% burned
+      s.branches += n; s.licSoldToday += n; s.licLastClose = lic;
+    }
+  }
+
+  // 5 — the crowd retires branches under exit pressure
+  const wantExit = (s.branches-1) * sh.exit * (0.5 + rng());
+  const whole = Math.floor(wantExit) + (rng() < (wantExit%1) ? 1 : 0);
+  if(whole > 0) crowdRetire(s, whole);
+
+  const f = resolutionFee(s);
+  if(f > s.peakFee){ s.peakFee = f; s.peakPressure = exitPressure(s); s.peakDay = Math.floor(d)+1; }
+
+  // 6 — advance the clock; close the epoch every 24 hours
+  s.hour++;
+  s.wPtr = s.hour % 168;
+  s.wHist[s.wPtr] = 0;
+
+  if(s.hour % 24 === 0){
+    const F = s.epochFlow;
+    // expansion only when net flow is strictly positive (§5: zero counts as contraction)
+    routeFees(s, s.epochFee, F > 0);
+    s.flowHist.push(F);
+    const L = s.flowHist.length;
+    // the issuance signal is the sum of the last TWO completed epochs — the slow lever
+    const signal = (s.flowHist[L-1]||0) + (s.flowHist[L-2]||0);
+    const prevM = s.m;
+    s.m = signal > 0 ? Math.min(P.mCeil, s.m + P.mRaise)
+                     : Math.max(P.mFloor, s.m - P.mCut);
+    if(!s.firstCeil  && s.m >= P.mCeil -1e-9 && prevM < P.mCeil -1e-9) s.firstCeil  = s.epoch+1;
+    if(!s.firstFloor && s.m <= P.mFloor+1e-9 && prevM > P.mFloor+1e-9) s.firstFloor = s.epoch+1;
+    s.epoch++;
+    s.epochFlow = 0; s.epochFee = 0;
+    return true;
+  }
+  return false;
+}
+
+/* ============================================================
+   THE FULL YEAR — rerun instantly on every input change
+   ============================================================ */
+function simulate(){
+  const cfg = SCN[scenario];
+  const rng = mulberry32(cfg.seed);
+  const s = fresh();
+  const R = {price:[], circ:[], burned:[], mult:[], flow:[], fee:[], pressure:[],
+             reserves:[], bb:[], userBal:[]};
+  for(let h=0; h<HOURS; h++){
+    if(tick(s, cfg, rng)){
+      R.price.push(price(s));
+      R.circ.push(circulating(s));
+      R.burned.push(burnTotal(s));
+      R.mult.push(s.m);
+      R.flow.push(s.flowHist[s.flowHist.length-1]);
+      R.fee.push(resolutionFee(s));
+      R.pressure.push(exitPressure(s));
+      R.reserves.push(s.reserves);
+      R.bb.push(s.bbEth);
+      R.userBal.push(s.user.bal);
+    }
+  }
+  return {s, R};
+}
+let SIM = null;
+
+let queued = false;
+function requestSim(){
+  if(queued) return;
+  queued = true;
+  requestAnimationFrame(()=>{ queued=false; SIM = simulate(); paint(); });
+}
+
+/* ============================================================
+   FORMATTING
+   ============================================================ */
+function fmt(n){
+  const a = Math.abs(n);
+  if(a >= 1e9) return (n/1e9).toFixed(3)+"B";
+  if(a >= 1e6) return (n/1e6).toFixed(2)+"M";
+  if(a >= 1e3) return Math.round(n).toLocaleString("en-US");
+  return n.toFixed(a<10?2:0);
+}
+const fmtEth = n => (Math.abs(n)>=1000 ? Math.round(n).toLocaleString("en-US") : n.toFixed(Math.abs(n)<10?2:1))+" ETH";
+const pct = n => (n*100).toFixed(1)+"%";
+function fmtPriceM(p){    // ETH per 1M $STANDARD
+  const v = p*1e6;
+  return v>=100 ? v.toFixed(0) : v>=10 ? v.toFixed(1) : v>=1 ? v.toFixed(2) : v.toFixed(3);
+}
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ============================================================
+   CHART ENGINE — canvas, crosshair + tooltip
+   ============================================================ */
+function mkChart(canvasId, tipId, draw, probe){
+  const cv = document.getElementById(canvasId);
+  const tip = document.getElementById(tipId);
+  const st = {hover:null};
+  function size(){
+    const r = cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio||1, 2);
+    cv.width = Math.max(1, Math.round(r.width*dpr));
+    cv.height = Math.max(1, Math.round(r.height*dpr));
+    const ctx = cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return {ctx, w:r.width, h:r.height};
+  }
+  cv.addEventListener("pointermove", e=>{
+    const r = cv.getBoundingClientRect();
+    st.hover = {x:e.clientX-r.left, y:e.clientY-r.top};
+    render();
+  });
+  cv.addEventListener("pointerleave", ()=>{ st.hover=null; tip.style.opacity=0; render(); });
+  function render(){
+    if(!SIM) return;
+    const {ctx,w,h} = size();
+    ctx.clearRect(0,0,w,h);
+    const info = draw(ctx, w, h);
+    if(st.hover && probe && info){
+      const p = probe(info, st.hover, w, h);
+      if(p){
+        tip.innerHTML = p.html;
+        tip.style.left = p.x+"px"; tip.style.top = p.y+"px"; tip.style.opacity = 1;
+      } else tip.style.opacity = 0;
+    }
+  }
+  return {render};
+}
+
+const PAD = {l:48, r:12, t:10, b:24};
+function axes(ctx,w,h,ticks,fmtY){
+  ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
+  ctx.fillStyle = css("--ink-3");
+  ctx.font = '11px "IBM Plex Mono", monospace';
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  for(const t of ticks){
+    ctx.globalAlpha = .55;
+    ctx.beginPath(); ctx.moveTo(PAD.l, t.y+.5); ctx.lineTo(w-PAD.r, t.y+.5); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.fillText(fmtY(t.v), PAD.l-7, t.y);
+  }
+}
+function xDayLabels(ctx, w, h, X, n, toDay){
+  ctx.fillStyle = css("--ink-3");
+  ctx.font = '11px "IBM Plex Mono", monospace';
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  [0,.25,.5,.75,1].forEach(f=>{
+    const i = Math.round(f*(n-1));
+    ctx.fillText("d"+toDay(i), Math.min(Math.max(X(i), PAD.l+12), w-PAD.r-14), h-PAD.b+7);
+  });
+}
+function niceTicks(min,max,n){
+  if(!isFinite(min)||!isFinite(max)||min===max){ max=min+1; }
+  const span=(max-min)/n, mag=Math.pow(10,Math.floor(Math.log10(Math.abs(span)||1)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=span)||mag*10;
+  const out=[]; for(let v=Math.ceil(min/step)*step; v<=max+1e-9; v+=step) out.push(v);
+  return out;
+}
+function lineChart(getSeries, colorVars, fmtY, opts){
+  opts = opts||{};
+  return (ctx,w,h)=>{
+    const series = getSeries();
+    const n = Math.max(...series.map(s=>s.length));
+    if(n<2) return null;
+    let lo=Infinity, hi=-Infinity;
+    for(const s of series) for(const v of s){ if(v<lo)lo=v; if(v>hi)hi=v; }
+    if(opts.floor!==undefined) lo = Math.min(lo, opts.floor());
+    if(opts.ceil!==undefined)  hi = Math.max(hi, opts.ceil());
+    const LG = opts.log, T = v => LG ? Math.log10(Math.max(v,1e-18)) : v;
+    if(LG){ lo = T(lo); hi = T(hi); }
+    const pad=(hi-lo)*0.12 || Math.abs(hi)*0.12 || 1; lo-=pad; hi+=pad;
+    const X = i => PAD.l + (w-PAD.l-PAD.r) * (n<2?0:i/(n-1));
+    const Y = v => PAD.t + (h-PAD.t-PAD.b) * (1-(T(v)-lo)/(hi-lo));
+    const tickVals = niceTicks(lo,hi,4).map(t => LG ? Math.pow(10,t) : t);
+    axes(ctx,w,h, tickVals.map(v=>({v,y:Y(v)})), fmtY);
+    xDayLabels(ctx,w,h,X,n,i=>i+1);
+
+    const guides = opts.guides ? opts.guides() : [];
+    for(const g of guides){
+      ctx.save(); ctx.setLineDash([3,4]); ctx.strokeStyle=css("--line-2"); ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(PAD.l,Y(g)+.5); ctx.lineTo(w-PAD.r,Y(g)+.5); ctx.stroke(); ctx.restore();
+    }
+    series.forEach((s,si)=>{
+      if(s.length<2) return;
+      const col = css(colorVars[si]);
+      if(opts.fill && si===0){
+        const grad = ctx.createLinearGradient(0,PAD.t,0,h-PAD.b);
+        grad.addColorStop(0, col+"33"); grad.addColorStop(1, col+"05");
+        ctx.beginPath(); ctx.moveTo(X(0), Y(s[0]));
+        for(let i=1;i<s.length;i++) opts.step ? (ctx.lineTo(X(i),Y(s[i-1])), ctx.lineTo(X(i),Y(s[i]))) : ctx.lineTo(X(i),Y(s[i]));
+        ctx.lineTo(X(s.length-1), h-PAD.b); ctx.lineTo(X(0), h-PAD.b); ctx.closePath();
+        ctx.fillStyle = grad; ctx.fill();
+      }
+      ctx.beginPath(); ctx.moveTo(X(0), Y(s[0]));
+      for(let i=1;i<s.length;i++) opts.step ? (ctx.lineTo(X(i),Y(s[i-1])), ctx.lineTo(X(i),Y(s[i]))) : ctx.lineTo(X(i),Y(s[i]));
+      ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.lineJoin="round"; ctx.lineCap="round"; ctx.stroke();
+      const li = s.length-1;
+      ctx.beginPath(); ctx.arc(X(li), Y(s[li]), 3.2, 0, 6.284);
+      ctx.fillStyle = col; ctx.fill();
+      ctx.strokeStyle = css("--surface"); ctx.lineWidth = 2; ctx.stroke();
+    });
+    return {n,X,Y,series};
+  };
+}
+function probeLine(labels, fmts, extra){
+  return (info, hov, w) => {
+    const {n,X,Y,series} = info;
+    let bi=0, bd=1e9;
+    for(let i=0;i<n;i++){ const d=Math.abs(X(i)-hov.x); if(d<bd){bd=d;bi=i;} }
+    if(bd>34) return null;
+    let rows = series.map((s,si)=> s[bi]===undefined ? "" :
+      `<div><b>${labels[si]}</b> ${fmts[si](s[bi])}</div>`).join("");
+    if(extra) rows += extra(bi);
+    return {x:Math.min(Math.max(X(bi),64),w-64), y:Y(series[0][bi]??0), html:`<div>Day ${bi+1}</div>${rows}`};
+  };
+}
+
+/* ============================================================
+   THE CHARTS
+   ============================================================ */
+const charts = {};
+
+charts.flow = mkChart("ch-flow","tip-flow",(ctx,w,h)=>{
+  const f = SIM.R.flow, weeks=[];
+  for(let i=0;i<f.length;i+=7) weeks.push(f.slice(i,i+7).reduce((a,b)=>a+b,0));
+  const n = weeks.length; if(n<2) return null;
+  const hi = Math.max(1, ...weeks.map(Math.abs));
+  const X = i => PAD.l + (w-PAD.l-PAD.r) * ((i+0.5)/n);
+  const Y = v => PAD.t + (h-PAD.t-PAD.b) * (1-(v+hi)/(2*hi));
+  axes(ctx,w,h, niceTicks(-hi,hi,4).map(v=>({v,y:Y(v)})), v=>fmt(v));
+  xDayLabels(ctx,w,h,X,n,i=>i*7+1);
+  ctx.strokeStyle=css("--line-2"); ctx.beginPath(); ctx.moveTo(PAD.l,Y(0)+.5); ctx.lineTo(w-PAD.r,Y(0)+.5); ctx.stroke();
+  const bw = Math.max(2, (w-PAD.l-PAD.r)/n - 2);
+  weeks.forEach((v,i)=>{
+    ctx.fillStyle = v>0 ? css("--brass") : css("--teal");
+    const y0=Y(0), y1=Y(v), top=Math.min(y0,y1), hgt=Math.max(1.5,Math.abs(y1-y0));
+    const r = Math.min(3, bw/2, hgt);
+    ctx.beginPath();
+    if(v>0) ctx.roundRect(X(i)-bw/2, top, bw, hgt, [r,r,0,0]);
+    else    ctx.roundRect(X(i)-bw/2, top, bw, hgt, [0,0,r,r]);
+    ctx.fill();
+  });
+  return {weeks,X,Y};
+}, (info,hov,w)=>{
+  const {weeks,X,Y} = info;
+  let bi=-1,bd=1e9;
+  for(let i=0;i<weeks.length;i++){const dd=Math.abs(X(i)-hov.x); if(dd<bd){bd=dd;bi=i;}}
+  if(bi<0||bd>22) return null;
+  const v=weeks[bi], d0=bi*7+1, d1=Math.min(DAYS,(bi+1)*7);
+  return {x:Math.min(Math.max(X(bi),80),w-80), y:Y(Math.max(v,0)),
+    html:`<div>Week ${bi+1} · days ${d0}–${d1}</div><div><b>${v>0?"Net inflow":"Net outflow"}</b></div><div>${v>0?"+":""}${fmt(v)} ETH</div>`};
+});
+
+charts.mult = mkChart("ch-mult","tip-mult",
+  lineChart(()=>[SIM.R.mult],["--ink-2"], v=>v.toFixed(2)+"×",
+    {step:true, fill:true, floor:()=>P.mFloor, ceil:()=>P.mCeil, guides:()=>[P.mFloor,P.mCeil]}),
+  probeLine(["m"],[v=>v.toFixed(2)+"×"]));
+
+charts.supply = mkChart("ch-supply","tip-supply",
+  lineChart(()=>[SIM.R.circ, SIM.R.burned],["--rose","--ink-3"], fmt),
+  probeLine(["Circulating","Burned"],[fmt,fmt]));
+
+charts.price = mkChart("ch-price","tip-price",
+  lineChart(()=>[SIM.R.price],["--teal"], v=>fmtPriceM(v), {fill:true, log:true}),
+  probeLine(["Price"],[v=>fmtPriceM(v)+" ETH / 1M"]));
+
+charts.def = mkChart("ch-def","tip-def",
+  lineChart(()=>[SIM.R.reserves, SIM.R.bb],["--brass","--teal"], v=>fmt(v), {floor:()=>0}),
+  probeLine(["Reserves","Buybacks"],[fmtEth,fmtEth]));
+
+charts.fee = mkChart("ch-fee","tip-fee",
+  lineChart(()=>[SIM.R.fee],["--rose"], v=>Math.round(v*100)+"%",
+    {fill:true, floor:()=>0, ceil:()=>P.feeCeil*1.06, guides:()=>[P.feeCeil]}),
+  probeLine(["Fee"],[pct], bi=>`<div>${pct(SIM.R.pressure[bi])} exiting in 7d</div>`));
+
+charts.user = mkChart("ch-user","tip-user",
+  lineChart(()=>[SIM.R.userBal],["--brass"], fmt, {fill:true, floor:()=>0}),
+  probeLine(["Accrued"],[fmt]));
+
+charts.split = mkChart("ch-split","tip-split",(ctx,w,h)=>{
+  const burned = SIM.s.burnFee, stayers = SIM.s.feeToStayersTotal, tot = burned+stayers;
+  if(tot < 1){
+    ctx.fillStyle=css("--ink-3"); ctx.font='12px Archivo, sans-serif';
+    ctx.textAlign="left"; ctx.textBaseline="middle";
+    ctx.fillText("No exits in this run yet.", 8, h/2);
+    return null;
+  }
+  const bars = [
+    {lab:"Paid by everyone who exited",  v:tot,     c:css("--ink-3")},
+    {lab:"Burned forever",               v:burned,  c:css("--rose")},
+    {lab:"Paid to bankers who stayed",   v:stayers, c:css("--brass")}
+  ];
+  const hi = tot * 1.06, x0 = 8, bh = 22, gap = 20;
+  const bw = w - x0 - PAD.r - 8;
+  bars.forEach((b,i)=>{
+    const y = 16 + i*(bh+gap);
+    ctx.fillStyle = css("--surface-2");
+    ctx.beginPath(); ctx.roundRect(x0, y, bw, bh, 3); ctx.fill();
+    const fw = Math.max(3, bw * (b.v/hi));
+    ctx.fillStyle = b.c;
+    ctx.beginPath(); ctx.roundRect(x0, y, fw, bh, [3,4,4,3]); ctx.fill();
+    ctx.fillStyle = css("--ink-2"); ctx.font='12.5px Archivo, sans-serif';
+    ctx.textAlign="left"; ctx.textBaseline="bottom";
+    ctx.fillText(b.lab, x0, y-3);
+    ctx.fillStyle = css("--ink"); ctx.font='500 13px "IBM Plex Mono", monospace';
+    ctx.textBaseline="middle";
+    ctx.fillText(fmt(b.v), x0+8, y+bh/2);
+  });
+  return {bars, bh, gap};
+}, (info,hov,w)=>{
+  const {bars,bh,gap}=info;
+  for(let i=0;i<bars.length;i++){
+    const y = 16+i*(bh+gap);
+    if(hov.y>=y && hov.y<=y+bh){
+      return {x:Math.min(Math.max(hov.x,100),w-100), y:y,
+        html:`<div>${bars[i].lab}</div><div><b>${fmt(bars[i].v)} $STANDARD</b></div>`};
+    }
+  }
+  return null;
+});
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = id => document.getElementById(id);
+
+function paint(){
+  const s = SIM.s, R = SIM.R;
+
+  // tiles
+  $("t-circ").textContent = fmt(circulating(s));
+  $("t-max").textContent  = fmt(maxSupply(s));
+  $("t-price").textContent = fmtPriceM(price(s));
+  $("t-pricen").textContent = "ETH/1M · "+(price(s)/(P.seedEth/GENESIS)).toFixed(2)+"× start";
+  $("t-mult").textContent = s.m.toFixed(2)+"×";
+  $("t-multn").textContent = s.budgetDay ? "budget spent day "+s.budgetDay : fmt(P.baseIssue*s.m)+" / day";
+  $("t-peak").textContent = s.peakFee>0 ? pct(s.peakFee) : "—";
+  $("t-peakn").textContent = s.peakFee>0 ? "on day "+s.peakDay : "no exits";
+  $("t-res").textContent = fmtEth(s.reserves);
+  $("t-bb").textContent = fmtEth(s.bbEth);
+  $("t-bbn").textContent = s.burnBuyback>0 ? fmt(s.burnBuyback)+" burned" : "no buybacks yet";
+  $("t-burn").textContent = fmt(burnTotal(s));
+  $("t-burnn").textContent = "max supply −"+pct(burnTotal(s)/HARD_CAP);
+  $("t-branches").textContent = Math.round(s.branches).toLocaleString("en-US");
+  $("t-charters").textContent = Math.round(s.charters).toLocaleString("en-US");
+
+  // captions
+  const exp = R.flow.filter(v=>v>0).length, con = R.flow.length-exp;
+  const net = R.flow.reduce((a,b)=>a+b,0);
+  $("cap-flow").textContent = exp+" expansion epochs · "+con+" contraction · net "+(net>=0?"+":"")+fmtEth(net);
+  let mcap = "m ends at "+s.m.toFixed(2)+"×";
+  if(s.firstCeil)  mcap += " · first hit the ceiling on day "+s.firstCeil;
+  if(s.firstFloor) mcap += " · first hit the floor on day "+s.firstFloor;
+  $("cap-mult").textContent = mcap;
+  $("cap-supply").textContent = fmt(burnTotal(s))+" burned · max supply shrank "+pct(burnTotal(s)/HARD_CAP)
+    + (s.budgetDay ? " · issuance budget ran out on day "+s.budgetDay : "");
+  $("cap-price").textContent = "price ended at "+(price(s)/(P.seedEth/GENESIS)).toFixed(2)+"× the starting price";
+  $("cap-def").textContent = fmtEth(s.reserves)+" in hard reserves · "+fmt(s.burnBuyback)+" tokens bought back and burned";
+  $("cap-exit").textContent = s.peakFee>0
+    ? "peak fee "+pct(s.peakFee)+" on day "+s.peakDay+" · stayers collected "+fmt(s.feeToStayersTotal)
+    : "no exits in this run";
+  const u = s.user, f = resolutionFee(s);
+  $("cap-user").textContent = "doing nothing earned "+fmt(u.bal)+" · "+fmt(u.stayed)+" of it from other people's exits";
+
+  // receipt
+  $("r-mint").textContent = fmt(s.mints);
+  $("r-burn").textContent = fmt(burnTotal(s));
+  $("r-circ").textContent = fmt(circulating(s));
+  const bt = burnTotal(s) || 1;
+  const rows = [
+    ["Expansion licences", s.burnLic],
+    ["Buyback and burn",   s.burnBuyback],
+    ["Resolution fees",    s.burnFee],
+    ["Trading fees in <span class=\"std\">$STANDARD</span>", s.burnTradeFee]
+  ];
+  $("burn-tbl").innerHTML = rows.map(([k,v])=>
+    `<tr><td>${k}</td><td class="n">${fmt(v)}</td><td class="n">${(v/bt*100).toFixed(1)}%</td></tr>`).join("");
+
+  // one passive charter
+  $("b-accr").textContent = fmt(u.bal);
+  $("b-stayed").textContent = fmt(u.stayed);
+  $("b-feeq").textContent = pct(f);
+  $("b-netq").innerHTML = fmt(u.bal*(1-f))+' <span class="std">$STANDARD</span>';
+  $("b-ethq").textContent = (u.bal*(1-f)*price(s)).toFixed(3)+" ETH";
+
+  for(const k in charts) charts[k].render();
+}
+
+/* scenario picker */
+document.querySelectorAll("[data-scn]").forEach(b=>b.addEventListener("click",()=>{
+  scenario = b.dataset.scn;
+  document.querySelectorAll("[data-scn]").forEach(o=>o.setAttribute("aria-pressed", o===b));
+  requestSim();
+}));
+
+/* sliders, placed next to the charts they explain */
+document.querySelectorAll(".sliderbox").forEach(box=>{
+  box.innerHTML = box.dataset.keys.split(",").map(k=>{
+    const [label,min,max,step] = SPEC[k];
+    return `<div class="param">
+      <label for="p-${k}">${label}<span class="numv" id="pv-${k}"></span></label>
+      <input type="range" id="p-${k}" min="${min}" max="${max}" step="${step}" value="${P[k]}">
+    </div>`;
+  }).join("");
+});
+Object.keys(SPEC).forEach(k=>{
+  const inp = $("p-"+k); if(!inp) return;
+  const out = $("pv-"+k), fm = SPEC[k][4];
+  const sync = ()=>{ out.textContent = fm(P[k]); };
+  inp.addEventListener("input", ()=>{ P[k] = +inp.value; sync(); requestSim(); });
+  sync();
+});
+
+let rz;
+window.addEventListener("resize", ()=>{ clearTimeout(rz); rz = setTimeout(()=>{ if(SIM) paint(); }, 120); });
+if(window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>{ if(SIM) paint(); });
+
+SIM = simulate();
+paint();
+})();
+</script>
