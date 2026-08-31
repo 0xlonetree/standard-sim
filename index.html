@@ -15,6 +15,7 @@
   --brass:#9A6B14; --teal:#0086A6; --rose:#A8446B;
   --brass-fill:rgba(154,107,20,.14); --teal-fill:rgba(0,134,166,.14); --rose-fill:rgba(168,68,107,.13);
   --shadow:0 1px 2px rgba(23,29,26,.06), 0 8px 24px -12px rgba(23,29,26,.18);
+  --ease-out:cubic-bezier(.23,1,.32,1);
   --r:3px;
 }
 @media (prefers-color-scheme: dark){
@@ -92,6 +93,60 @@ h1{
 .progress button:hover{background:var(--surface-2)}
 .progress button.on{background:var(--ink); color:var(--bg); border-color:var(--ink)}
 
+/* ---------- policy model ---------- */
+.policy-model{
+  --policy-accent:var(--brass); --policy-fill:var(--brass-fill);
+  margin:18px 0 22px; padding:15px; border:1px solid var(--line);
+  border-radius:var(--r); background:var(--surface-2);
+}
+.policy-model[data-state="contraction"]{--policy-accent:var(--teal); --policy-fill:var(--teal-fill)}
+.policy-model-head{display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:13px}
+.policy-model-copy h3{font-size:19px; font-weight:500; line-height:1.25; margin:0 0 3px; letter-spacing:-.005em}
+.policy-model-copy p{font-size:13px; line-height:1.45; margin:0; color:var(--ink-3)}
+.policy-modes{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px; flex:0 0 260px}
+.policy-modes button{
+  min-width:0; padding:7px 9px; border:1px solid var(--line-2); border-radius:var(--r);
+  background:var(--surface); color:var(--ink-2); font:500 12px/1.25 "Zalando Sans",Arial,sans-serif;
+  cursor:pointer; transition:transform 160ms var(--ease-out), background 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+}
+.policy-modes button:active{transform:scale(.97)}
+.policy-modes button:focus-visible{outline:2px solid var(--policy-accent); outline-offset:2px}
+.policy-modes button[aria-pressed="true"]{
+  background:var(--policy-fill); border-color:var(--policy-accent); color:var(--ink);
+  box-shadow:inset 0 -2px 0 var(--policy-accent);
+}
+@media(hover:hover) and (pointer:fine){.policy-modes button:hover{border-color:var(--ink-3)}}
+.policy-chain{
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  border:1px solid var(--line); border-radius:var(--r); background:var(--surface);
+  box-shadow:var(--shadow); transition:opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
+}
+.policy-node{position:relative; min-height:116px; padding:13px 15px; border-right:1px solid var(--line)}
+.policy-node:last-child{border-right:0}
+.policy-node:not(:last-child)::after{
+  content:"\2192"; position:absolute; z-index:1; right:-11px; top:50%; width:22px; height:22px;
+  display:grid; place-items:center; transform:translateY(-50%); border:1px solid var(--line);
+  border-radius:50%; background:var(--surface); color:var(--policy-accent); font:500 12px/1 "Zalando Sans",Arial,sans-serif;
+  transition:color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+.policy-node .stage{display:block; margin-bottom:7px; color:var(--ink-3); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase}
+.policy-node strong{display:block; color:var(--ink); font-size:16px; font-weight:500; line-height:1.25}
+.policy-node .detail{display:block; margin-top:5px; color:var(--ink-2); font-size:12.5px; line-height:1.4}
+.policy-summary{
+  margin:11px 0 0; padding:8px 11px; max-width:none; border-left:2px solid var(--policy-accent);
+  background:var(--policy-fill); color:var(--ink-2); font-size:13px; line-height:1.45;
+  transition:opacity 180ms var(--ease-out), transform 180ms var(--ease-out), background 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+.policy-model.is-changing .policy-chain,.policy-model.is-changing .policy-summary{opacity:.42; transform:translateY(3px)}
+@media(max-width:700px){
+  .policy-model-head{display:block}
+  .policy-modes{margin-top:12px; width:100%}
+  .policy-chain{grid-template-columns:1fr}
+  .policy-node{min-height:0; border-right:0; border-bottom:1px solid var(--line)}
+  .policy-node:last-child{border-bottom:0}
+  .policy-node:not(:last-child)::after{right:auto; top:auto; bottom:-11px; left:50%; transform:translateX(-50%) rotate(90deg)}
+}
+
 /* ---------- steps ---------- */
 .step{display:none}
 .step.on{display:block; animation:stepin .22s ease}
@@ -162,16 +217,6 @@ ul.plain li{margin-bottom:8px}
 .compare .card p{margin-bottom:8px}
 .compare .card p:last-child{margin-bottom:0}
 
-/* ---------- regimes table ---------- */
-table.tbl{width:100%; border-collapse:collapse; font-size:13.5px; margin:18px 0; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow)}
-table.tbl th,table.tbl td{text-align:left; padding:9px 14px; border-bottom:1px solid var(--line); vertical-align:top}
-table.tbl tr:last-child td{border-bottom:0}
-table.tbl th{font-family:"Zalando Sans",Arial,sans-serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
-table.tbl th.in,table.tbl td.in{color:var(--brass)}
-table.tbl th.out,table.tbl td.out{color:var(--teal)}
-table.tbl td:first-child{color:var(--ink-2)}
-.scroll{overflow-x:auto}
-
 /* ---------- FAQ ---------- */
 .faq{margin:18px 0 0}
 .faq details{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); margin-bottom:8px; padding:0 16px}
@@ -224,7 +269,7 @@ table.tbl td:first-child{color:var(--ink-2)}
   <header class="masthead">
     <span class="eyebrow">Standard Reserve &#183; unofficial guide</span>
     <h1>What is the Standard Reserve?</h1>
-    <p class="sub">This explainer aims to make it extremely easy to understand standard reserve. If you're still having trouble after working through the steps, reach out so updates can be made to adjust further.</p>
+    <p class="sub">This walkthrough aims to make Standard Reserve easy to understand. If anything is still unclear after you finish, reach out so the guide can be improved.</p>
     <div class="progress" id="progress" role="tablist" aria-label="Steps"></div>
   </header>
 
@@ -346,16 +391,40 @@ table.tbl td:first-child{color:var(--ink-2)}
     <span class="num">05 &#183; The two regimes</span>
     <h2>Expansion and contraction</h2>
     <p>Every epoch is either expansion or contraction, set by the sign of net flow. Positive flow is expansion. Zero or negative flow is contraction. Four things change:</p>
-    <div class="scroll">
-    <table class="tbl">
-      <thead><tr><th></th><th class="in">Expansion</th><th class="out">Contraction</th></tr></thead>
-      <tbody>
-        <tr><td>Issuance</td><td class="in">rises one step per epoch</td><td class="out">cut immediately</td></tr>
-        <tr><td>Fee routing</td><td class="in">expansion vault buys hard reserves</td><td class="out">contraction vault buys <span class="std">$STANDARD</span> and burns it</td></tr>
-        <tr><td>Licences</td><td class="in">cost more</td><td class="out">cost less</td></tr>
-        <tr><td>Exits</td><td class="in">cheap, near the fee floor</td><td class="out">expensive, the fee rises with exit volume</td></tr>
-      </tbody>
-    </table>
+    <div class="policy-model" id="policy-model" data-state="expansion" aria-labelledby="policy-model-title">
+      <div class="policy-model-head">
+        <div class="policy-model-copy">
+          <h3 id="policy-model-title">See the regime change</h3>
+          <p>Switch the policy state to compare its effects.</p>
+        </div>
+        <div class="policy-modes" role="group" aria-label="Policy regime">
+          <button type="button" data-policy-state="expansion" aria-pressed="true">Expansion</button>
+          <button type="button" data-policy-state="contraction" aria-pressed="false">Contraction</button>
+        </div>
+      </div>
+      <div class="policy-chain">
+        <div class="policy-node">
+          <span class="stage">Signal</span>
+          <strong data-policy-title>Positive net flow</strong>
+          <span class="detail" data-policy-detail>Capital enters through the pool.</span>
+        </div>
+        <div class="policy-node">
+          <span class="stage">Issuance</span>
+          <strong data-policy-title>Rises one step</strong>
+          <span class="detail" data-policy-detail>Raises are earned by sustained inflow.</span>
+        </div>
+        <div class="policy-node">
+          <span class="stage">Fee routing</span>
+          <strong data-policy-title>Hard reserves</strong>
+          <span class="detail" data-policy-detail>The active vault buys assets.</span>
+        </div>
+        <div class="policy-node">
+          <span class="stage">Licences and exits</span>
+          <strong data-policy-title>Licence prices rise</strong>
+          <span class="detail" data-policy-detail>Exits stay near the fee floor.</span>
+        </div>
+      </div>
+      <p class="policy-summary" id="policy-summary" aria-live="polite">Expansion rewards growth: issuance and licence prices rise while fee ETH adds hard reserves.</p>
     </div>
     <p>The steps are asymmetric by design. Raises are earned slowly and cuts land at once. <strong>The bank turns defensive faster than it turns generous.</strong> A downturn triggers all three defences in the same epoch: slower issuance, buybacks, and higher exit fees.</p>
   </section>
@@ -483,6 +552,65 @@ const back = document.getElementById("back");
 const next = document.getElementById("next");
 const where = document.getElementById("where");
 let cur = 0;
+
+const policyModel = document.getElementById("policy-model");
+if(policyModel){
+  const policyStates = {
+    expansion:{
+      nodes:[
+        ["Positive net flow","Capital enters through the pool."],
+        ["Rises one step","Raises are earned by sustained inflow."],
+        ["Hard reserves","The active vault buys assets."],
+        ["Licence prices rise","Exits stay near the fee floor."]
+      ],
+      summary:"Expansion rewards growth: issuance and licence prices rise while fee ETH adds hard reserves."
+    },
+    contraction:{
+      nodes:[
+        ["Zero or negative flow","Capital stalls or leaves the pool."],
+        ["Cut immediately","The bank becomes defensive at once."],
+        ["Buy and burn","The active vault buys $STANDARD."],
+        ["Licence prices fall","Exit fees rise with exit volume."]
+      ],
+      summary:"Contraction turns defensive at once: issuance is cut, fee ETH funds buybacks, and exits can become more expensive."
+    }
+  };
+  const policyButtons = Array.from(policyModel.querySelectorAll("[data-policy-state]"));
+  const policyNodes = Array.from(policyModel.querySelectorAll(".policy-node"));
+  const policySummary = document.getElementById("policy-summary");
+  const reducePolicyMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let currentPolicyState = "";
+  let policyTimer;
+
+  function writePolicyState(state){
+    policyStates[state].nodes.forEach((content,i)=>{
+      policyNodes[i].querySelector("[data-policy-title]").textContent = content[0];
+      policyNodes[i].querySelector("[data-policy-detail]").textContent = content[1];
+    });
+    policySummary.textContent = policyStates[state].summary;
+  }
+
+  function showPolicyState(state, animate){
+    if(!policyStates[state] || (state===currentPolicyState && animate!==false)) return;
+    currentPolicyState = state;
+    window.clearTimeout(policyTimer);
+    policyModel.dataset.state = state;
+    policyButtons.forEach(button=>button.setAttribute("aria-pressed", button.dataset.policyState===state));
+    if(animate===false || reducePolicyMotion.matches){
+      policyModel.classList.remove("is-changing");
+      writePolicyState(state);
+      return;
+    }
+    policyModel.classList.add("is-changing");
+    policyTimer = window.setTimeout(()=>{
+      writePolicyState(state);
+      policyModel.classList.remove("is-changing");
+    },90);
+  }
+
+  policyButtons.forEach(button=>button.addEventListener("click",()=>showPolicyState(button.dataset.policyState,true)));
+  showPolicyState("expansion",false);
+}
 
 progress.innerHTML = steps.map((s,i)=>
   `<button role="tab" data-i="${i}" title="${s.dataset.title}">${s.dataset.pill || String(i+1).padStart(2,"0")}</button>`).join("");
