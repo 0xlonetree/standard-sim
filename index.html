@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;500;600&display=swap">
 
 <style>
 :root{
@@ -40,30 +40,30 @@ html{scrollbar-gutter:stable}
 [hidden]{display:none!important}
 body{
   margin:0; background:var(--bg); color:var(--ink);
-  font-family:Archivo,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"Zalando Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:15px; line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.mono{font-family:"Zalando Sans",Arial,sans-serif}
 .wrap{max-width:840px; margin:0 auto; padding:28px 22px 56px}
 
 /* ---------- $STANDARD chip ---------- */
 .std{
   background:var(--ink); color:var(--bg);
-  font-family:"IBM Plex Mono",monospace; font-size:.82em; font-weight:500;
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:.82em; font-weight:500;
   padding:1px 6px 2px; border-radius:2px; white-space:nowrap; letter-spacing:.02em;
 }
 
 /* ---------- top bar ---------- */
 .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap}
-.credit{display:flex; gap:8px; align-items:baseline; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); flex-wrap:wrap}
+.credit{display:flex; gap:8px; align-items:baseline; font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; color:var(--ink-3); flex-wrap:wrap}
 .credit a{color:var(--ink-2); text-decoration:none; border-bottom:1px solid var(--line-2)}
 .credit a:hover{color:var(--ink); border-bottom-color:var(--ink-2)}
 .credit a.contrib{border:1px solid var(--line-2); border-radius:var(--r); padding:3px 9px; margin-left:4px}
 .credit a.contrib:hover{background:var(--surface-2)}
 .pagenav{display:flex; gap:6px}
 .pagenav a{
-  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
   text-decoration:none; color:var(--ink-2); border:1px solid var(--line-2); border-radius:var(--r);
   padding:5px 12px; transition:background .12s;
 }
@@ -72,9 +72,9 @@ body{
 
 /* ---------- header ---------- */
 .masthead{padding-bottom:18px; border-bottom:1px solid var(--line-2)}
-.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+.eyebrow{font-family:"Zalando Sans",Arial,sans-serif; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
 h1{
-  font-family:Newsreader,Georgia,serif; font-optical-sizing:auto;
+  font-family:"Zalando Sans",Arial,sans-serif; font-optical-sizing:auto;
   font-weight:400; font-size:clamp(28px,4.4vw,40px); line-height:1.04;
   margin:14px 0 0; letter-spacing:-.012em; text-wrap:balance;
 }
@@ -84,7 +84,7 @@ h1{
 /* ---------- progress strip ---------- */
 .progress{display:flex; gap:6px; margin:16px 0 0; flex-wrap:wrap}
 .progress button{
-  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em;
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:10.5px; letter-spacing:.08em;
   padding:4px 10px; border:1px solid var(--line-2); background:var(--surface);
   color:var(--ink-3); border-radius:var(--r); cursor:pointer; transition:background .12s;
 }
@@ -96,8 +96,8 @@ h1{
 .step.on{display:block; animation:stepin .22s ease}
 @keyframes stepin{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
 
-.num{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3); display:block; margin-top:30px}
-h2{font-family:Newsreader,Georgia,serif; font-weight:500; font-size:27px; margin:6px 0 12px; letter-spacing:-.008em}
+.num{font-family:"Zalando Sans",Arial,sans-serif; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3); display:block; margin-top:30px}
+h2{font-family:"Zalando Sans",Arial,sans-serif; font-weight:500; font-size:27px; margin:6px 0 12px; letter-spacing:-.008em}
 p{margin:0 0 14px; color:var(--ink-2); max-width:66ch}
 p strong, li strong{color:var(--ink); font-weight:600}
 ul.plain{margin:0 0 14px; padding-left:20px; color:var(--ink-2); max-width:64ch}
@@ -122,9 +122,9 @@ ul.plain li{margin-bottom:8px}
 .stepnav .btn.primary:hover{opacity:.87; background:var(--ink)}
 .stepnav .btn:disabled{opacity:.35; cursor:not-allowed}
 .stepnav .btn:disabled:hover{background:var(--surface)}
-.stepnav .where{grid-area:where; text-align:center; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.stepnav .where{grid-area:where; text-align:center; font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
 .keyhint{grid-area:hint; font-size:11.5px; color:var(--ink-3); text-align:center; margin:0 0 14px; max-width:none}
-.keyhint kbd{font-family:"IBM Plex Mono",monospace; border:1px solid var(--line-2); border-radius:2px; padding:0 4px; font-size:10.5px}
+.keyhint kbd{font-family:"Zalando Sans",Arial,sans-serif; border:1px solid var(--line-2); border-radius:2px; padding:0 4px; font-size:10.5px}
 
 /* ---------- callout ---------- */
 .callout{
@@ -136,8 +136,8 @@ ul.plain li{margin-bottom:8px}
 /* ---------- cast cards ---------- */
 .cast{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin:18px 0}
 .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:14px 16px; box-shadow:var(--shadow)}
-.card h3{font-family:Newsreader,Georgia,serif; font-size:18px; font-weight:500; margin:0 0 6px; display:flex; align-items:baseline; gap:8px}
-.card h3 .tag{font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); border:1px solid var(--brass); border-radius:2px; padding:1px 5px}
+.card h3{font-family:"Zalando Sans",Arial,sans-serif; font-size:18px; font-weight:500; margin:0 0 6px; display:flex; align-items:baseline; gap:8px}
+.card h3 .tag{font-family:"Zalando Sans",Arial,sans-serif; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); border:1px solid var(--brass); border-radius:2px; padding:1px 5px}
 .card p{font-size:13.5px; margin:0; line-height:1.5}
 
 /* ---------- diagram ---------- */
@@ -146,10 +146,10 @@ ul.plain li{margin-bottom:8px}
 .diagram .dnote{font-size:12px; color:var(--ink-3); text-align:center; margin:8px 0 6px}
 .nodebox{fill:var(--surface-2); stroke:var(--line-2)}
 .nodebox.hot{fill:var(--brass-fill); stroke:var(--brass)}
-.ntitle{fill:var(--ink); font:500 14px Archivo,sans-serif}
-.nsub{fill:var(--ink-3); font:10.5px "IBM Plex Mono",monospace}
+.ntitle{fill:var(--ink); font:500 14px "Zalando Sans",sans-serif}
+.nsub{fill:var(--ink-3); font:10.5px "Zalando Sans",sans-serif}
 .flowline{stroke:var(--ink-3); stroke-width:1.5; fill:none}
-.flowlab{fill:var(--ink-2); font:10.5px "IBM Plex Mono",monospace}
+.flowlab{fill:var(--ink-2); font:10.5px "Zalando Sans",sans-serif}
 .arrowhead{fill:var(--ink-3)}
 
 /* ---------- comparison ---------- */
@@ -165,7 +165,7 @@ ul.plain li{margin-bottom:8px}
 table.tbl{width:100%; border-collapse:collapse; font-size:13.5px; margin:18px 0; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow)}
 table.tbl th,table.tbl td{text-align:left; padding:9px 14px; border-bottom:1px solid var(--line); vertical-align:top}
 table.tbl tr:last-child td{border-bottom:0}
-table.tbl th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+table.tbl th{font-family:"Zalando Sans",Arial,sans-serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
 table.tbl th.in,table.tbl td.in{color:var(--brass)}
 table.tbl th.out,table.tbl td.out{color:var(--teal)}
 table.tbl td:first-child{color:var(--ink-2)}
@@ -174,9 +174,9 @@ table.tbl td:first-child{color:var(--ink-2)}
 /* ---------- FAQ ---------- */
 .faq{margin:18px 0 0}
 .faq details{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); margin-bottom:8px; padding:0 16px}
-.faq summary{cursor:pointer; font-family:Newsreader,Georgia,serif; font-size:16.5px; font-weight:500; padding:12px 26px 12px 0; list-style:none; display:block; position:relative}
+.faq summary{cursor:pointer; font-family:"Zalando Sans",Arial,sans-serif; font-size:16.5px; font-weight:500; padding:12px 26px 12px 0; list-style:none; display:block; position:relative}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+"; font-family:"IBM Plex Mono",monospace; font-size:14px; color:var(--ink-3); position:absolute; right:0; top:13px}
+.faq summary::after{content:"+"; font-family:"Zalando Sans",Arial,sans-serif; font-size:14px; color:var(--ink-3); position:absolute; right:0; top:13px}
 .faq details[open] summary::after{content:"\2212"}
 .faq details p{font-size:13.5px; margin:0; padding:0 0 14px; max-width:66ch}
 
@@ -187,7 +187,7 @@ table.tbl td:first-child{color:var(--ink-2)}
   padding:18px 20px; box-shadow:var(--shadow);
 }
 .cta .t{flex:1 1 260px}
-.cta .t b{font-family:Newsreader,Georgia,serif; font-size:19px; font-weight:500; display:block; margin-bottom:3px}
+.cta .t b{font-family:"Zalando Sans",Arial,sans-serif; font-size:19px; font-weight:500; display:block; margin-bottom:3px}
 .cta .t span{font-size:13.5px; color:var(--ink-2)}
 .cta a.btn{
   flex:none; text-decoration:none; background:var(--ink); color:var(--bg);

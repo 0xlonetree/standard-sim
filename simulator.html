@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;500;600&display=swap">
 
 <style>
 :root{
@@ -39,28 +39,28 @@
 html{scrollbar-gutter:stable}
 .std{
   background:var(--ink); color:var(--bg);
-  font-family:"IBM Plex Mono",monospace; font-size:.82em; font-weight:500;
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:.82em; font-weight:500;
   padding:1px 6px 2px; border-radius:2px; white-space:nowrap; letter-spacing:.02em;
 }
 body{
   margin:0; background:var(--bg); color:var(--ink);
-  font-family:Archivo,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"Zalando Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:15px; line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace; font-variant-numeric:tabular-nums}
+.mono{font-family:"Zalando Sans",Arial,sans-serif; font-variant-numeric:tabular-nums}
 .wrap{max-width:840px; margin:0 auto; padding:28px 22px 56px}
 
 /* ---------- top bar ---------- */
 .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap}
-.credit{display:flex; gap:8px; align-items:baseline; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); flex-wrap:wrap}
+.credit{display:flex; gap:8px; align-items:baseline; font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; color:var(--ink-3); flex-wrap:wrap}
 .credit a{color:var(--ink-2); text-decoration:none; border-bottom:1px solid var(--line-2)}
 .credit a:hover{color:var(--ink); border-bottom-color:var(--ink-2)}
 .credit a.contrib{border:1px solid var(--line-2); border-radius:var(--r); padding:3px 9px; margin-left:4px}
 .credit a.contrib:hover{background:var(--surface-2)}
 .pagenav{display:flex; gap:6px}
 .pagenav a{
-  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
   text-decoration:none; color:var(--ink-2); border:1px solid var(--line-2); border-radius:var(--r);
   padding:5px 12px; transition:background .12s;
 }
@@ -69,9 +69,9 @@ body{
 
 /* ---------- header ---------- */
 .masthead{padding-bottom:18px; border-bottom:1px solid var(--line-2)}
-.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+.eyebrow{font-family:"Zalando Sans",Arial,sans-serif; font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
 h1{
-  font-family:Newsreader,Georgia,serif; font-optical-sizing:auto;
+  font-family:"Zalando Sans",Arial,sans-serif; font-optical-sizing:auto;
   font-weight:400; font-size:clamp(28px,4.4vw,40px); line-height:1.04;
   margin:14px 0 0; letter-spacing:-.012em; text-wrap:balance;
 }
@@ -84,7 +84,7 @@ h1{
   font-size:14px; color:var(--ink-2); display:flex; gap:10px; align-items:flex-start;
 }
 .notice .tag{
-  flex:none; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em;
+  flex:none; font-family:"Zalando Sans",Arial,sans-serif; font-size:10px; letter-spacing:.1em;
   text-transform:uppercase; color:var(--brass); border:1px solid var(--brass);
   padding:1px 6px; border-radius:2px; margin-top:1px;
 }
@@ -100,46 +100,46 @@ button:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
 }
 .scn:hover{background:var(--surface-2)}
 .scn[aria-pressed="true"]{border-color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--ink), var(--shadow)}
-.scn .t{display:flex; align-items:baseline; gap:9px; font-family:Newsreader,Georgia,serif; font-size:20px; font-weight:500}
-.scn .glyph{font-family:"IBM Plex Mono",monospace; font-size:15px}
+.scn .t{display:flex; align-items:baseline; gap:9px; font-family:"Zalando Sans",Arial,sans-serif; font-size:20px; font-weight:500}
+.scn .glyph{font-family:"Zalando Sans",Arial,sans-serif; font-size:15px}
 .scn .d{font-size:13.5px; color:var(--ink-2); margin-top:4px; line-height:1.45}
 
 /* ---------- tiles ---------- */
 .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:14px; background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
 @media(max-width:620px){.tiles{grid-template-columns:repeat(2,1fr)}}
 .tile{background:var(--surface); padding:13px 15px 14px}
-.tile .k{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:5px}
-.tile .v{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:21px; font-weight:500; line-height:1.15; display:block}
+.tile .k{font-family:"Zalando Sans",Arial,sans-serif; font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:5px}
+.tile .v{font-family:"Zalando Sans",Arial,sans-serif; font-variant-numeric:tabular-nums; font-size:21px; font-weight:500; line-height:1.15; display:block}
 .tile .n{font-size:12.5px; color:var(--ink-3); margin-top:3px; display:block; line-height:1.35}
 .v.brass{color:var(--brass)} .v.teal{color:var(--teal)} .v.rose{color:var(--rose)}
 
 /* ---------- explainer rows ---------- */
-h2.sec{font-family:Newsreader,Georgia,serif; font-weight:500; font-size:26px; margin:38px 0 3px; letter-spacing:-.008em}
+h2.sec{font-family:"Zalando Sans",Arial,sans-serif; font-weight:500; font-size:26px; margin:38px 0 3px; letter-spacing:-.008em}
 .secnote{color:var(--ink-2); font-size:15px; margin:0 0 10px; max-width:70ch}
 .row{display:grid; grid-template-columns:minmax(240px,300px) minmax(0,1fr); gap:22px; margin-top:26px; align-items:center}
 .row>.sliders{grid-column:1/-1}
 .row .sliderbox{grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); column-gap:26px}
 @media(max-width:920px){.row{grid-template-columns:1fr; gap:12px}}
-.explain .num{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
-.explain h3{font-family:Newsreader,Georgia,serif; font-size:24px; font-weight:500; margin:3px 0 8px; letter-spacing:-.005em}
+.explain .num{font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+.explain h3{font-family:"Zalando Sans",Arial,sans-serif; font-size:24px; font-weight:500; margin:3px 0 8px; letter-spacing:-.005em}
 .explain p{font-size:15px; color:var(--ink-2); margin:0 0 10px; line-height:1.6}
 .explain p strong{color:var(--ink); font-weight:600}
 .cap{
-  font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--brass);
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:13px; color:var(--brass);
   border-left:2px solid var(--brass); padding:3px 0 3px 10px; margin:13px 0 0;
   font-variant-numeric:tabular-nums; line-height:1.6;
 }
 .sliders{display:grid; gap:12px; align-content:start}
-.sliders .head{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3)}
+.sliders .head{font-family:"Zalando Sans",Arial,sans-serif; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3)}
 .sliderbox{display:grid; gap:12px}
 .param label{display:flex; justify-content:space-between; gap:10px; font-size:13.5px; color:var(--ink-2); margin-bottom:4px; align-items:baseline}
-.param .numv{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; color:var(--ink); font-size:13.5px}
+.param .numv{font-family:"Zalando Sans",Arial,sans-serif; font-variant-numeric:tabular-nums; color:var(--ink); font-size:13.5px}
 input[type=range]{width:100%; accent-color:var(--brass); height:18px; cursor:pointer; margin:0}
 input[type=range]:focus-visible{outline:2px solid var(--brass); outline-offset:3px}
 
 /* ---------- panels & charts ---------- */
 .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px 14px; box-shadow:var(--shadow)}
-.ptitle{font-family:Newsreader,Georgia,serif; font-size:18.5px; font-weight:500; margin:0 0 10px; letter-spacing:-.005em; color:var(--ink-2)}
+.ptitle{font-family:"Zalando Sans",Arial,sans-serif; font-size:18.5px; font-weight:500; margin:0 0 10px; letter-spacing:-.005em; color:var(--ink-2)}
 .legend{display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--ink-2); margin-top:9px}
 .legend span{display:inline-flex; align-items:center; gap:6px}
 .swatch{width:11px; height:3px; border-radius:2px; flex:none}
@@ -149,24 +149,24 @@ canvas{display:block; width:100%; height:100%; touch-action:pan-y}
 .tip{
   position:absolute; pointer-events:none; opacity:0; transform:translate(-50%,-118%);
   background:var(--ink); color:var(--bg); padding:7px 10px; border-radius:var(--r);
-  font-family:"IBM Plex Mono",monospace; font-size:12.5px; line-height:1.5; white-space:nowrap;
+  font-family:"Zalando Sans",Arial,sans-serif; font-size:12.5px; line-height:1.5; white-space:nowrap;
   transition:opacity .1s; z-index:5; font-variant-numeric:tabular-nums;
 }
 .tip b{font-weight:600}
 
 /* ---------- receipt & tables ---------- */
-.receipt{font-family:"IBM Plex Mono",monospace; font-size:14px; font-variant-numeric:tabular-nums; line-height:2}
+.receipt{font-family:"Zalando Sans",Arial,sans-serif; font-size:14px; font-variant-numeric:tabular-nums; line-height:2}
 .receipt .rrow{display:flex; justify-content:space-between; gap:16px; border-bottom:1px dotted var(--line)}
 .receipt .rrow.tot{border-bottom:0; border-top:1px solid var(--line-2); margin-top:5px; padding-top:5px; font-weight:600}
 .receipt .op{color:var(--ink-3); width:1.4em; display:inline-block}
 .kv{display:flex; justify-content:space-between; gap:16px; padding:7px 0; border-bottom:1px dotted var(--line); font-size:14.5px}
 .kv:last-child{border-bottom:0}
 .kv .lab{color:var(--ink-2)}
-.kv .val{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-weight:500}
+.kv .val{font-family:"Zalando Sans",Arial,sans-serif; font-variant-numeric:tabular-nums; font-weight:500}
 table.tbl{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
 table.tbl th,table.tbl td{text-align:left; padding:6px 10px 6px 0; border-bottom:1px solid var(--line)}
-table.tbl th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
-table.tbl td.n{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:right}
+table.tbl th{font-family:"Zalando Sans",Arial,sans-serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+table.tbl td.n{font-family:"Zalando Sans",Arial,sans-serif; font-variant-numeric:tabular-nums; text-align:right}
 .scroll{overflow-x:auto}
 ul.notes{font-size:14px; color:var(--ink-2); margin:8px 0 0; padding-left:18px}
 ul.notes li{margin-bottom:5px}
@@ -841,7 +841,7 @@ const PAD = {l:48, r:12, t:10, b:24};
 function axes(ctx,w,h,ticks,fmtY){
   ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
   ctx.fillStyle = css("--ink-3");
-  ctx.font = '11px "IBM Plex Mono", monospace';
+  ctx.font = '11px "Zalando Sans", sans-serif';
   ctx.textAlign = "right"; ctx.textBaseline = "middle";
   for(const t of ticks){
     ctx.globalAlpha = .55;
@@ -852,7 +852,7 @@ function axes(ctx,w,h,ticks,fmtY){
 }
 function xDayLabels(ctx, w, h, X, n, toDay){
   ctx.fillStyle = css("--ink-3");
-  ctx.font = '11px "IBM Plex Mono", monospace';
+  ctx.font = '11px "Zalando Sans", sans-serif';
   ctx.textAlign = "center"; ctx.textBaseline = "top";
   [0,.25,.5,.75,1].forEach(f=>{
     const i = Math.round(f*(n-1));
@@ -990,7 +990,7 @@ charts.user = mkChart("ch-user","tip-user",
 charts.split = mkChart("ch-split","tip-split",(ctx,w,h)=>{
   const burned = SIM.s.burnFee, stayers = SIM.s.feeToStayersTotal, tot = burned+stayers;
   if(tot < 1){
-    ctx.fillStyle=css("--ink-3"); ctx.font='12px Archivo, sans-serif';
+    ctx.fillStyle=css("--ink-3"); ctx.font='12px "Zalando Sans", sans-serif';
     ctx.textAlign="left"; ctx.textBaseline="middle";
     ctx.fillText("No exits in this run yet.", 8, h/2);
     return null;
@@ -1009,10 +1009,10 @@ charts.split = mkChart("ch-split","tip-split",(ctx,w,h)=>{
     const fw = Math.max(3, bw * (b.v/hi));
     ctx.fillStyle = b.c;
     ctx.beginPath(); ctx.roundRect(x0, y, fw, bh, [3,4,4,3]); ctx.fill();
-    ctx.fillStyle = css("--ink-2"); ctx.font='12.5px Archivo, sans-serif';
+    ctx.fillStyle = css("--ink-2"); ctx.font='12.5px "Zalando Sans", sans-serif';
     ctx.textAlign="left"; ctx.textBaseline="bottom";
     ctx.fillText(b.lab, x0, y-3);
-    ctx.fillStyle = css("--ink"); ctx.font='500 13px "IBM Plex Mono", monospace';
+    ctx.fillStyle = css("--ink"); ctx.font='500 13px "Zalando Sans", sans-serif';
     ctx.textBaseline="middle";
     ctx.fillText(fmt(b.v), x0+8, y+bh/2);
   });
@@ -1127,5 +1127,6 @@ if(window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEvent
 
 SIM = simulate();
 paint();
+if(document.fonts) document.fonts.ready.then(()=>paint());
 })();
 </script>
