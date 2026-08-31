@@ -2,6 +2,7 @@
 <title>What is the Standard Reserve?</title>
 <meta name="description" content="A plain-language guide to the Standard Reserve. One currency, one market, one central bank made of code.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://standard-sim.vercel.app/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;500;600&display=swap">
@@ -204,8 +205,8 @@ table.tbl td:first-child{color:var(--ink-2)}
 
   <div class="topbar">
     <nav class="pagenav">
-      <a class="on" href="index.html">Explainer</a>
-      <a href="simulator.html">Simulator</a>
+      <a class="on" href="/">Explainer</a>
+      <a href="/sim">Simulator</a>
     </nav>
     <div class="credit">
       <span>site by</span>
@@ -455,7 +456,7 @@ table.tbl td:first-child{color:var(--ink-2)}
         <b>Now watch it run</b>
         <span>Pick a path for the year. Then move the levers the whitepaper redacts and watch a full year recompute.</span>
       </div>
-      <a class="btn" href="simulator.html">Open the simulator &#8594;</a>
+      <a class="btn" href="/sim">Open the simulator &#8594;</a>
     </div>
   </section>
 
@@ -498,7 +499,7 @@ function show(i, scroll){
   const last = cur===steps.length-1;
   next.disabled = last;
   where.textContent = (cur+1)+" / "+steps.length+" · "+steps[cur].dataset.title;
-  history.replaceState(null, "", "#"+(cur+1));
+  history.replaceState(null, "", cur===0 ? "/" : "/#"+(cur+1));
   if(scroll!==false) window.scrollTo({top:0});
 }
 
