@@ -116,12 +116,13 @@ button:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
 /* ---------- explainer rows ---------- */
 h2.sec{font-family:"Zalando Sans",Arial,sans-serif; font-weight:500; font-size:26px; margin:38px 0 3px; letter-spacing:-.008em}
 .secnote{color:var(--ink-2); font-size:15px; margin:0 0 10px; max-width:70ch}
-.row{display:grid; grid-template-columns:minmax(240px,300px) minmax(0,1fr); gap:22px; margin-top:26px; align-items:center}
+.row{display:grid; grid-template-columns:minmax(240px,300px) minmax(0,1fr); column-gap:22px; row-gap:12px; margin-top:26px; align-items:center}
 .row>.sliders{grid-column:1/-1}
 .row .sliderbox{grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); column-gap:26px}
 @media(max-width:920px){.row{grid-template-columns:1fr; gap:12px}}
-.explain .num{font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
-.explain h3{font-family:"Zalando Sans",Arial,sans-serif; font-size:24px; font-weight:500; margin:3px 0 8px; letter-spacing:-.005em}
+.sectiontitle{grid-column:1/-1}
+.sectiontitle .num{font-family:"Zalando Sans",Arial,sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+.sectiontitle h3{font-family:"Zalando Sans",Arial,sans-serif; font-size:24px; font-weight:500; margin:3px 0 0; letter-spacing:-.005em}
 .explain p{font-size:15px; color:var(--ink-2); margin:0 0 10px; line-height:1.6}
 .explain p strong{color:var(--ink); font-weight:600}
 .cap{
@@ -242,9 +243,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 01 · net flow -->
   <div class="row">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">01 &#183; The signal</span>
       <h3>The bank reads one number</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> Net ETH flow through the pool, week by week: ETH in from buys minus ETH out from sells. Brass weeks are net inflow and teal weeks are net outflow. This is the central bank's only input. Not price, not volume, not votes.</p>
       <p><strong>Why it matters.</strong> Price can be moved with very little capital. Net flow only moves when real capital enters or leaves. The issuance decision sums the last two epochs, so one manipulated day cannot swing the rate. Fee routing reads the current epoch alone, so defence reacts fast.</p>
       <div class="cap" id="cap-flow">&#8212;</div>
@@ -261,9 +264,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 02 · multiplier -->
   <div class="row three">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">02 &#183; The response</span>
       <h3>Cuts are instant, raises are earned</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> The policy multiplier <em>m</em>, which scales daily issuance. Dashed lines are its floor and ceiling. Every epoch it moves one step: up on sustained inflow, down on outflow.</p>
       <p><strong>Why it matters.</strong> The step sizes are asymmetric by design. The default cut is three times the raise, so the bank turns defensive faster than it turns generous. Set the cut equal to the raise and watch how much longer dilution runs in the decay scenario.</p>
       <div class="cap" id="cap-mult">&#8212;</div>
@@ -281,9 +286,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 03 · supply -->
   <div class="row">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">03 &#183; The currency</span>
       <h3>Supply is a receipt</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> Circulating supply against everything burned so far. The receipt below the chart is whitepaper equation 3.1, an identity that holds at every block: genesis liquidity, plus withdrawal mints, minus cumulative burns.</p>
       <p><strong>Why it matters.</strong> Tokens are minted at exactly one moment, a withdrawal. They are burned constantly: expansion licences in full, buybacks in full, half of every exit fee, and all trading fees paid in <span class="std">$STANDARD</span>. Burned tokens never return, so the maximum supply only decreases. When the burn line gains on the supply line, the economy is eating rather than bleeding.</p>
       <div class="cap" id="cap-supply">&#8212;</div>
@@ -312,9 +319,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 04 · price -->
   <div class="row three">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">04 &#183; The market</span>
       <h3>One pool, and a floor that only grows</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> The pool price on a log scale, in ETH per million <span class="std">$STANDARD</span>. The pool is a constant-product market seeded with the 100M genesis tokens. The position is protocol-owned, full-range, and can never be withdrawn.</p>
       <p><strong>Why it matters.</strong> This pool is the only way in or out of the economy, which is what makes net flow measurable. Every swap pays a fee. 15% of all fee ETH becomes permanent protocol-owned liquidity, half of it swapped to <span class="std">$STANDARD</span> and paired. Exit liquidity deepens over time and no one can remove it.</p>
       <div class="cap" id="cap-price">&#8212;</div>
@@ -332,9 +341,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 05 · defense -->
   <div class="row">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">05 &#183; The vaults</span>
       <h3>Volatility becomes balance sheet</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> Where fee ETH went. Each epoch, 70% of all protocol ETH routes to the active vault. In expansion epochs it buys hard reserve assets such as tokenized gold. In contraction epochs it buys <span class="std">$STANDARD</span> on the open market and burns everything it buys.</p>
       <p><strong>Why it matters.</strong> Fees are paid on buys and sells alike, so the bank converts volatility in either direction into balance sheet. Buybacks execute in small hourly steps, at most 10% of the vault or 0.2% of pool depth per tick, so defence cannot be baited into one blockable shot. Unspent balance rolls forward and the vault can never sell.</p>
       <div class="cap" id="cap-def">&#8212;</div>
@@ -351,9 +362,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 06 · exit door -->
   <div class="row three">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">06 &#183; The exit door</span>
       <h3>Leaving is priced by the crowd</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> The resolution fee charged on withdrawals, across the year. It rises quadratically with exit pressure, which is withdrawals over the trailing 7 days measured against everything still held at the bank. The curve runs from a quiet floor to a hard ceiling. Your rate locks the moment you commit.</p>
       <p><strong>Why it matters.</strong> In a traditional bank run, whoever exits first is made whole and whoever waits absorbs the loss. Running first is always correct. Here, heavy exit volume raises the fee on the exiters themselves. Half of what they pay is burned and <strong>half goes to the bankers who stayed</strong>. Mass exits transfer value from the impatient to the patient. Withdrawals are never paused. The cost of leaving is the only control mechanism.</p>
       <div class="cap" id="cap-exit">&#8212;</div>
@@ -373,9 +386,11 @@ ul.notes li{margin-bottom:5px}
 
   <!-- 07 · one charter -->
   <div class="row three">
-    <div class="explain">
+    <div class="sectiontitle">
       <span class="num">07 &#183; One banker</span>
       <h3>One passive charter</h3>
+    </div>
+    <div class="explain">
       <p><strong>What you see.</strong> The accrued balance of one charter that holds a single branch and takes no action all year. Issuance streams to it continuously, pro rata across all branches in the system, plus its share of every exit fee paid by leavers.</p>
       <p><strong>Why it matters.</strong> Balances are ledger entries. Tokens are minted only when a banker withdraws. Withdrawing has a cost beyond the fee: it permanently retires the branch that was earning. Value cannot be extracted while keeping the vehicle that produced it. Retiring the last branch burns the charter, and the only way back in is a new charter at auction.</p>
       <div class="cap" id="cap-user">&#8212;</div>
